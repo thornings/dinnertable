@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using ClientMadbordet.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ClientMadbordet.Models;
 
 namespace ClientMadbordet
 {
@@ -35,8 +36,13 @@ namespace ClientMadbordet
             });
 
             services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlServer(
+                Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<FoodContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("MadbordetDatabase")));
+
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
