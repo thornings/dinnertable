@@ -5,20 +5,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClientMadbordet.Controllers
 {
-    public class HomeController : Controller
+    public class CalendarController : Controller
     {
-        FoodContext madbordetdb;
+        FoodContext fooddb;
 
-        public HomeController()
+        public CalendarController()
         {
             var options = new DbContextOptionsBuilder<FoodContext>();
             var context = new FoodContext(options.Options);
-            this.madbordetdb = context;
+            this.fooddb = context;
         }
 
         public IActionResult Index()
         {
-            var allFoods = madbordetdb.Foods;
+            var allFoods = fooddb.Foods;
             return View(allFoods);
         }
 
@@ -34,8 +34,8 @@ namespace ClientMadbordet.Controllers
         {
             if(ModelState.IsValid)
             {
-                madbordetdb.Foods.Add(newFood);
-                madbordetdb.SaveChanges();
+                fooddb.Foods.Add(newFood);
+                fooddb.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(newFood);
@@ -48,7 +48,7 @@ namespace ClientMadbordet.Controllers
             {
                 return NotFound();
             }
-            Food food = madbordetdb.Foods.Find(id);
+            Food food = fooddb.Foods.Find(id);
 
             if (food == null)
             {
@@ -67,8 +67,8 @@ namespace ClientMadbordet.Controllers
             }
             if (ModelState.IsValid)
             {
-                madbordetdb.Foods.Update(food);
-                madbordetdb.SaveChanges();
+                fooddb.Foods.Update(food);
+                fooddb.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(food);
@@ -82,7 +82,7 @@ namespace ClientMadbordet.Controllers
                 return NotFound();
             }
 
-            Food food = madbordetdb.Foods.Find(id);
+            Food food = fooddb.Foods.Find(id);
 
             if (food == null)
             {
@@ -100,14 +100,14 @@ namespace ClientMadbordet.Controllers
                 return NotFound();
             }
 
-            var food = madbordetdb.Foods.Find(id);
+            var food = fooddb.Foods.Find(id);
 
             if (food == null)
             {
                 return NotFound();
             }
 
-            madbordetdb.Foods.Remove(food);
+            fooddb.Foods.Remove(food);
             return RedirectToAction("Index");
         }
 

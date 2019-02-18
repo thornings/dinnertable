@@ -59,7 +59,7 @@ namespace ClientMadbordet
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Calendar/Error");
                 app.UseHsts();
             }
 
@@ -73,7 +73,11 @@ namespace ClientMadbordet
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Calendar}/{action=Index}/{id?}");
+
+                routes.MapRoute(
+                    name: "food",
+                    template: "{controller=Food}/{action=Index}/{id?}");
             });
         }
     }
