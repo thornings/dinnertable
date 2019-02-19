@@ -8,12 +8,15 @@ namespace ClientMadbordet.Controllers
     public class CalendarController : Controller
     {
         FoodContext fooddb;
+        MealContext mealdb;
 
         public CalendarController()
         {
             var options = new DbContextOptionsBuilder<FoodContext>();
-            var context = new FoodContext(options.Options);
-            this.fooddb = context;
+            this.fooddb = new FoodContext(options.Options);
+
+            var mealoptions = new DbContextOptionsBuilder<MealContext>();
+            mealdb = new MealContext(mealoptions.Options);
         }
 
         public IActionResult Index()
