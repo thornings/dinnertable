@@ -10,21 +10,17 @@ namespace ClientMadbordet.Controllers
 {
     public class MealController : Controller
     {
-        MealContext Mealdb;
+        CalendarContext CalendarDb;
 
         public MealController()
         {
-            DbContextOptions options = new DbContextOptions<MealContext>();
-            Mealdb = new MealContext(options);
+            var optionsBuilder = new DbContextOptionsBuilder<CalendarContext>();
+            CalendarDb = new CalendarContext(optionsBuilder.Options);
         }
 
         public IActionResult Index()
         {
-            return View(Mealdb.Meals);
+            return View();
         }
-
-
-
-
     }
 }

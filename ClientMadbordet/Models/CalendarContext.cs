@@ -2,9 +2,9 @@
 
 namespace ClientMadbordet.Models
 {
-    public class FoodContext : DbContext
+    public class CalendarContext : DbContext
     {
-        public FoodContext(DbContextOptions options)
+        public CalendarContext(DbContextOptions options)
             :base(options)
         {
         }
@@ -16,8 +16,14 @@ namespace ClientMadbordet.Models
             base.OnConfiguring(optionsBuilder);
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CalendarFoodItem>().ToTable("FoodItems");
+            modelBuilder.Entity<Meal>().HasAlternateKey(m => m.Name);
+        }
+
+        public virtual DbSet<CalendarFoodItem> FoodItems { get; set; }
         public virtual DbSet<Food> Foods { get; set; }
-
-
+        public virtual DbSet<Meal> Meals { get; set; }
     }
 }

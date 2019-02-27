@@ -39,13 +39,9 @@ namespace ClientMadbordet
             options.UseSqlServer(
                 Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDbContext<FoodContext>(options =>
+            services.AddDbContext<CalendarContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("MadbordetDatabase")));
-
-            services.AddDbContext<MealContext>(options =>
-            options.UseSqlServer(
-                Configuration.GetConnectionString("MadbordetDatabase")));
 
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -77,7 +73,7 @@ namespace ClientMadbordet
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Calendar}/{action=Index}/{id?}");
+                    template: "{controller=Calendar}/{action=Index}/{year?}/{month?}/{day?}");
 
                 routes.MapRoute(
                     name: "food",
@@ -86,6 +82,7 @@ namespace ClientMadbordet
                 routes.MapRoute(
                    name: "meal",
                    template: "{controller=Meal}/{action=Index}/{id?}");
+
             });
         }
     }

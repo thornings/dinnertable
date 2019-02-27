@@ -2,119 +2,108 @@
 using Microsoft.AspNetCore.Mvc;
 using ClientMadbordet.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using ClientMadbordet.ViewModels;
 
 namespace ClientMadbordet.Controllers
 {
     public class CalendarController : Controller
     {
-        FoodContext fooddb;
-        MealContext mealdb;
+        private CalendarContext calendarDatabase;
 
         public CalendarController()
         {
-            var options = new DbContextOptionsBuilder<FoodContext>();
-            this.fooddb = new FoodContext(options.Options);
-
-            var mealoptions = new DbContextOptionsBuilder<MealContext>();
-            mealdb = new MealContext(mealoptions.Options);
+            var calendaroptions = new DbContextOptionsBuilder<CalendarContext>();
+            this.calendarDatabase = new CalendarContext(calendaroptions.Options);
         }
 
-        public IActionResult Index()
+        public ActionResult Index(int year = 0, int month = 0, int day = 0)
         {
-            var allFoods = fooddb.Foods;
-            return View(allFoods);
+            DateTime myDate = GetMyDate(year, month, day);
+            ViewBag.myDate = myDate;
+            IQueryable<MealWithFoodItemsViewModel<CalendarFoodItem, string>> calendarFoodItems = GetFoodItemsInMeals(myDate);
+            return View(calendarFoodItems.ToList());
         }
 
-        [HttpGet]
-        public IActionResult Create()
+        private IQueryable<MealWithFoodItemsViewModel<CalendarFoodItem, string>> GetFoodItems(DateTime myDate)
         {
-            return View();
+            var calendarFoodItems =
+                from calendarItem in calendarDatabase.FoodItems.Include(fi => fi.Food).Include(fi => fi.Meal)
+                join meal in calendarDatabase.Meals on calendarItem.MealID_fk equals meal.MealID
+                where calendarItem.CalendarDate.Date == myDate.Date
+                group calendarItem by calendarItem.Meal.Name
+                into calendarGroup
+                select new MealWithFoodItemsViewModel<CalendarFoodItem, string>
+                {
+                    Key = calendarGroup.Key,
+                    Values = calendarGroup
+                };
+            return calendarFoodItems;
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind] Food newFood)
+
+        private IQueryable<MealWithFoodItemsViewModel<CalendarFoodItem, string>> GetFoodItemsInMeals(DateTime myDate)
         {
-            if(ModelState.IsValid)
-            {
-                fooddb.Foods.Add(newFood);
-                fooddb.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(newFood);
+            //var calendarFoodItems =
+            //                            from calendarItem in calendarDatabase.FoodItems.Include(fi => fi.Food).Include(fi => fi.Meal)
+            //                            join meal in calendarDatabase.Meals on calendarItem.MealID_fk equals meal.MealID into me
+            //                            from meal in me.DefaultIfEmpty()
+            //                            select new
+            //                            {
+            //                                calenderItems = calendarItem,
+            //                                meals = me
+            //                            };
+
+            //var calendarFoodItems =
+
+            //    from meal in calendarDatabase.Meals
+            //    join calendarItem in calendarDatabase.FoodItems on meal.MealID equals calendarItem.MealID_fk into ci
+            //    from calendarItem in ci.DefaultIfEmpty()
+            //    select new MealCalendarFoodItemGroup<CalendarFoodItem, string>
+            //    {
+            //        Key = meal.Name,
+            //        Values = ci
+            //    };
+
+            var cfi = calendarDatabase.FoodItems.Where(c => c.CalendarDate.Date == myDate.Date).Include(f=>f.Food).Include(m=>m.Meal);
+            var calendarFoodItems =
+                from meal in calendarDatabase.Meals
+                join calendarItem in cfi on meal.MealID equals calendarItem.MealID_fk               
+                into ci
+                select new MealWithFoodItemsViewModel<CalendarFoodItem, string>
+                {
+                    Key = meal.Name,
+                    Values = ci
+                };
+            return calendarFoodItems;
         }
 
-        [HttpGet]
-        public IActionResult Edit(int? id)
+
+        private static DateTime GetMyDate(int year, int month, int day)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            Food food = fooddb.Foods.Find(id);
+            DateTime myDate;
 
-            if (food == null)
+            // test parameters exists
+            if (year == 0 || (month) == 0 || day == 0)
             {
-                return NotFound();
+                myDate = DateTime.Now;
+                myDate = new DateTime(myDate.Year, myDate.Month, myDate.Day, 0, 0, 0);
             }
-            return View(food);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind]Food food)
-        {
-            if (id != food.FoodID)
+            else
             {
-                return NotFound();
-            }
-            if (ModelState.IsValid)
-            {
-                fooddb.Foods.Update(food);
-                fooddb.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(food);
-        }
-
-        [HttpGet]
-        public IActionResult Delete(int? id)
-        {
-            if(id==null)
-            {
-                return NotFound();
+                myDate = new DateTime(year, month, day, 0, 0, 0);
             }
 
-            Food food = fooddb.Foods.Find(id);
-
-            if (food == null)
-            {
-                return NotFound();
-            }
-
-            return View(food);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        public IActionResult DeleteConfirmed(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var food = fooddb.Foods.Find(id);
-
-            if (food == null)
-            {
-                return NotFound();
-            }
-
-            fooddb.Foods.Remove(food);
-            return RedirectToAction("Index");
+            return myDate;
         }
 
 
+        //public IActionResult Index()
+        //{
+        //    var allFoods = fooddb.Foods;
+        //    return View(allFoods);
+        //}
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

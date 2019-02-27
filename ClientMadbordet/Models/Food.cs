@@ -38,8 +38,26 @@ namespace ClientMadbordet.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal Energy { get; set; }
 
-        //  public virtual ICollection<Ingredients> Ingredients { get; set; }
-        // public virtual ICollection<CalendarItem> CalendarItems { get; set; }
+        public int FatEnergyPercent()
+        {
+            return decimal.ToInt32((Fat*9) / TotalEnergy() * 100);
+        }
+
+        public decimal CarbEnergyPercent()
+        {
+            return decimal.ToInt32((Carb*4) / TotalEnergy() * 100);
+        }
+
+        public decimal ProteinEnergyPercent()
+        {
+            return decimal.ToInt32((Protein*4) / TotalEnergy() * 100);
+        }
+
+        private decimal TotalEnergy()
+        {
+            return (Carb * 4) + (Fat * 9) + (Protein * 4);
+        }
+
     }
 
 }

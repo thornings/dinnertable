@@ -7,18 +7,17 @@ namespace ClientMadbordet.Controllers
 {
     public class FoodController : Controller
     {
-        FoodContext fooddb;
+        CalendarContext CalendarDb;
 
         public FoodController()
         {
-            var options = new DbContextOptionsBuilder<FoodContext>();
-            var context = new FoodContext(options.Options);
-            this.fooddb = context;
+            var optionsBuilder = new DbContextOptionsBuilder<CalendarContext>();
+            CalendarDb = new CalendarContext(optionsBuilder.Options);
         }
 
         public IActionResult Index()
         {
-            var allFoods = fooddb.Foods;
+            var allFoods = CalendarDb.Foods;
             return View(allFoods);
         }
 
@@ -34,8 +33,8 @@ namespace ClientMadbordet.Controllers
         {
             if(ModelState.IsValid)
             {
-                fooddb.Foods.Add(newFood);
-                fooddb.SaveChanges();
+                CalendarDb.Foods.Add(newFood);
+                CalendarDb.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(newFood);
@@ -48,7 +47,7 @@ namespace ClientMadbordet.Controllers
             {
                 return NotFound();
             }
-            Food food = fooddb.Foods.Find(id);
+            Food food = CalendarDb.Foods.Find(id);
 
             if (food == null)
             {
@@ -67,8 +66,8 @@ namespace ClientMadbordet.Controllers
             }
             if (ModelState.IsValid)
             {
-                fooddb.Foods.Update(food);
-                fooddb.SaveChanges();
+                CalendarDb.Foods.Update(food);
+                CalendarDb.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(food);
@@ -82,7 +81,7 @@ namespace ClientMadbordet.Controllers
                 return NotFound();
             }
 
-            Food food = fooddb.Foods.Find(id);
+            Food food = CalendarDb.Foods.Find(id);
 
             if (food == null)
             {
@@ -100,15 +99,15 @@ namespace ClientMadbordet.Controllers
                 return NotFound();
             }
 
-            var food = fooddb.Foods.Find(id);
+            var food = CalendarDb.Foods.Find(id);
 
             if (food == null)
             {
                 return NotFound();
             }
 
-            fooddb.Foods.Remove(food);
-            fooddb.SaveChanges();
+            CalendarDb.Foods.Remove(food);
+            CalendarDb.SaveChanges();
             return RedirectToAction("Index");
         }
 
