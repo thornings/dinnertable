@@ -1,8 +1,8 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
-for details on configuring this project to bundle and minify static web assets. */
+﻿
 body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background-color: lightcyan;
 }
 
 /* Wrapping element */
@@ -34,4 +34,26 @@ body {
     .carousel-caption {
         display: none;
     }
+}
+
+.fa-rotate-45 {
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+#calendarMenuButton {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+
+.full-screen {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    top: 0;
+    left: 0;
 }

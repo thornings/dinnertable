@@ -4,7 +4,19 @@
 // Write your JavaScript code.
 $(document).ready(function () {
     $("[data-toggle=popover]").popover({ html: true });
-  
+
+    //$('#calendarMenuButton').on("click", function () {
+    //    var faElement = $(this).find('i');
+    //    var isOpen = faElement.hasClass("fa-rotate-45");
+    //    if (isOpen)
+    //    {
+    //        faElement.removeClass('fa-rotate-45');
+    //    } else {
+    //        faElement.addClass('fa-rotate-45').addClass("fullSizeCalendar");
+    //    }
+    //});
+
+
     /* CHART */
     var canvasElements = $('.myChart');
 

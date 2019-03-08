@@ -21,9 +21,14 @@ namespace ClientMadbordet.Controllers
         public ActionResult Index(int year = 0, int month = 0, int day = 0)
         {
             DateTime myDate = GetMyDate(year, month, day);
-            ViewBag.myDate = myDate;
             IQueryable<MealWithFoodItemsViewModel<CalendarFoodItem, string>> calendarFoodItems = GetFoodItemsInMeals(myDate);
-            return View(calendarFoodItems.ToList());
+            var calendarMeals = this.calendarDatabase.Meals;
+            CalendarViewModel cvm = new CalendarViewModel();
+            cvm.CalendarFoodItems = calendarFoodItems;
+            cvm.Meals = calendarMeals;
+            cvm.TheDate = myDate;
+            cvm.TheDateText = myDate.Year + "/" + myDate.Month + "/" + myDate.Day;
+            return View(cvm);
         }
 
         private IQueryable<MealWithFoodItemsViewModel<CalendarFoodItem, string>> GetFoodItems(DateTime myDate)

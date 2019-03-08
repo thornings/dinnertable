@@ -1,73 +1,100 @@
-﻿@model IEnumerable<ClientMadbordet.ViewModels.MealWithFoodItemsViewModel<CalendarFoodItem, string>>
+﻿@model ClientMadbordet.ViewModels.CalendarViewModel;
+@*@model IEnumerable<ClientMadbordet.ViewModels.MealWithFoodItemsViewModel<CalendarFoodItem, string>>*@
 
 @{
     ViewData["Title"] = "Today";
 }
 
-<h1><a href="#"><</a>  @String.Format("{0:dd.MM yyyy}", @ViewData["mydate"]) <a href="#">></a></h1>
+<a href="#myModal" id="calendarMenuButton" role="button" class="btn btn-primary" data-toggle="modal">
+    <i class="fa fa-plus fa-2x"></i>
+</a>
+
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog full-screen" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add food</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fa fa-plus fa-2x fa-rotate-45"></i></span>
+                </button>
+            </div>
+            <div class="modal-body p-4" id="result">
+                <div class="row">
+
+                    @foreach (var meal in Model.Meals)
+                    {
+                        <div class="col-sm-6 col-lg-3">
+                            <a href="/calendarFood/@Model.TheDateText/@Html.DisplayFor(modelItem => meal.MealID)" 
+                               title="Add food @Html.DisplayFor(modelItem => meal.Name) ">
+                               @Html.DisplayFor(modelItem => meal.Name)
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h1><a href="#"><</a>  @String.Format("{0:dd.MM yyyy}", @Model.TheDate) <a href="#">></a></h1>
 
 <div class="container">
     <div class="row">
 
-        @foreach (var foodItemGroup in Model)
+        @foreach (var foodItemGroup in Model.CalendarFoodItems)
         {
             <h2>@foodItemGroup.Key</h2>
-            <table class="table">
-                <thead>
-                    <tr class="bg-primary">
-                        <th>energy prc</th>
-                        <th>Food</th>
-                        <th>Fats</th>
-                        <th>Carbs</th>
-                        <th>Proteins</th>
-                        <th>Energy per 100gr</th>
-                        <th>Weight</th>
-                        <th>Actions</th>
-                        <th>Food Energy percent</th>
-                    </tr>
-                </thead>
 
+            @if (foodItemGroup.Values.Count() != 0)
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr class="bg-primary">
+                                <th class="">energy prc</th>
+                                <th>Food</th>
+                                <th>Fats</th>
+                                <th>Carbs</th>
+                                <th>Proteins</th>
+                                <th>Energy per 100gr</th>
+                                <th>Weight</th>
+                            </tr>
+                        </thead>
 
-                @foreach (var item in foodItemGroup.Values)
-                {
-                    <tbody>
-                        <tr id="tableline">
-                            <td>
-                                <canvas class="myChart" style="padding: 5px;margin: auto; width: 80px; height: 50px; display: inline-block; ">
-                                </canvas>
-                            </td>
-                            <td><h5>@Html.DisplayFor(modelItem => item.Food.Name)</h5></td>
-                            <td ><h5 class="fatValue">@Html.DisplayFor(modelItem => item.Food.Fat)</h5></td>
-                            <td><h5 class="carbValue">@Html.DisplayFor(modelItem => item.Food.Carb)</h5></td>
-                            <td><h5 class="proteinValue">@Html.DisplayFor(modelItem => item.Food.Protein)</h5></td>
-                            <td><h5>@Html.DisplayFor(modelItem => item.Food.Energy)</h5></td>
-                            <td><h5>@Html.DisplayFor(modelItem => item.Food.Weight)</h5></td>
-                            <td>
-                                @*<a asp-action="Edit" asp-route-id="@food.FoodID">Edit</a> |
-                                    <a asp-action="Delete" asp-route-id="@food.FoodID">Remove</a>*@
-                                <a href="#" role="button" class="btn popovers" data-toggle="popover" title="ACTIONS"
-                                   data-content="<a href='calendar/edit/@item.CalendarFoodItemID' title='Change content of food item'>Edit</a><br /><a href='calendar/delete/@item.CalendarFoodItemID' title='Remove this food item'>Remove</a>"
-                                   data-original-title="">
-                                    Action
-                                </a>
-                            </td>
-                            <td>
-                                <h5>
-                                    protein @item.Food.ProteinEnergyPercent()
-                                    protein @item.Food.FatEnergyPercent()
-                                    protein @item.Food.CarbEnergyPercent()
-                                </h5>
-                            </td>
-                        </tr>
-                    </tbody>
+                        @foreach (var item in foodItemGroup.Values)
+                        {
+                            <tbody>
+                                <tr id="tableline">
+                                    <td class="d-none d-lg-table-cell">
+                                        <canvas class="myChart" style="padding: 5px;margin: auto; width: 80px; height: 50px; display: inline-block; "></canvas>
+                                    </td>
+                                    <td><h5>@Html.DisplayFor(modelItem => item.Food.Name)</h5></td>
+                                    <td><h5 class="fatValue">@Html.DisplayFor(modelItem => item.Food.Fat)</h5></td>
+                                    <td><h5 class="carbValue">@Html.DisplayFor(modelItem => item.Food.Carb)</h5></td>
+                                    <td><h5 class="proteinValue">@Html.DisplayFor(modelItem => item.Food.Protein)</h5></td>
+                                    <td><h5>@Html.DisplayFor(modelItem => item.Food.Energy)</h5></td>
+                                    <td><h5>@Html.DisplayFor(modelItem => item.Food.Weight)</h5></td>
+                                </tr>
+                            </tbody>
+                        }
 
-                }
-            </table>
-        }
+                    </table>
+                    </div>
+                    }
+                    else
+                    {
+                    <p>No values</p>
+                    }
+                    }
 
-    </div>
-</div>
+                </div>
 
 
 
+
+
+            </div>
 
