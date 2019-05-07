@@ -6,7 +6,8 @@ using System.Linq.Expressions;
 
 namespace ClientMadbordet.Repositories
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : Class 
     {
         protected readonly DbContext Context;
 
@@ -29,7 +30,7 @@ namespace ClientMadbordet.Repositories
             return Context.Set<TEntity>().ToList();
         }
 
-        public IEnumerable<TEntity> Find(Expression < Func<TEntity, bool>> predicate)
+        public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
         {
             return Context.Set<TEntity>().Where(predicate);
         }

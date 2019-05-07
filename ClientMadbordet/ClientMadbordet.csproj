@@ -6,11 +6,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Repositories\Repository.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Repositories\Repository.test" />
     <None Remove="ViewModels\Repository.js" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Repositories\Repository.js" />
+    <Compile Include="Repositories\Repository.test" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Repositories\Repository.cs" />
   </ItemGroup>
 
   <ItemGroup>
