@@ -6,5 +6,7 @@ namespace ClientMadbordet.ViewModels
     {
         public K Key;
         public IEnumerable<T> Values;
+        public int Id;
+
     }
 }

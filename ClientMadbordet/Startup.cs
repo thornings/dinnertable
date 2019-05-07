@@ -73,7 +73,7 @@ namespace ClientMadbordet
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Calendar}/{action=Index}/{year?}/{month?}/{day?}");
+                    template: "{controller=Calendar}/{action=Index}/{year:int}/{month:int}/{day:int}");
 
                 routes.MapRoute(
                     name: "food",
@@ -83,6 +83,17 @@ namespace ClientMadbordet
                    name: "meal",
                    template: "{controller=Meal}/{action=Index}/{id?}");
 
+                routes.MapRoute(
+                 name: "calendarfoodCreate",
+                 template: "{controller=CalendarFood}/{action=Create}/{year}/{month}/{day}/{foodId}/{mealId}");
+
+                routes.MapRoute(
+                 name: "calendarfoodAdd",
+                 template: "{controller=CalendarFood}/{action=Add}/{year?}/{month?}/{day?}/{mealId?}/{search?}");
+
+                routes.MapRoute(
+                 name: "calendarfoodDelete",
+                 template: "{controller=CalendarFood}/{action=Delete}/{back}/{foodItemId}");
             });
         }
     }

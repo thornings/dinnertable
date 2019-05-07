@@ -1,13 +1,8 @@
 ﻿@model ClientMadbordet.ViewModels.CalendarViewModel;
-@*@model IEnumerable<ClientMadbordet.ViewModels.MealWithFoodItemsViewModel<CalendarFoodItem, string>>*@
 
 @{
     ViewData["Title"] = "Today";
 }
-
-<a href="#myModal" id="calendarMenuButton" role="button" class="btn btn-primary" data-toggle="modal">
-    <i class="fa fa-plus fa-2x"></i>
-</a>
 
 <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog full-screen" role="document">
@@ -20,11 +15,10 @@
             </div>
             <div class="modal-body p-4" id="result">
                 <div class="row">
-
                     @foreach (var meal in Model.Meals)
                     {
                         <div class="col-sm-6 col-lg-3">
-                            <a href="/calendarFood/@Model.TheDateText/@Html.DisplayFor(modelItem => meal.MealID)" 
+                            <a href="/CalendarFood/Add/@Model.TheDateText/@meal.MealID" 
                                title="Add food @Html.DisplayFor(modelItem => meal.Name) ">
                                @Html.DisplayFor(modelItem => meal.Name)
                             </a>
@@ -39,14 +33,25 @@
     </div>
 </div>
 
-<h1><a href="#"><</a>  @String.Format("{0:dd.MM yyyy}", @Model.TheDate) <a href="#">></a></h1>
+<h1>
+    <a href="/Calendar/index/@Model.TheDate.AddDays(-1).ToString("yyyy'/'M'/'dd")" id="yesterday">&lt;</a>
+    <span id="today">@String.Format("{0:dd.MM yyyy}", @Model.TheDate)</span>
+    <a href="/Calendar/index/@Model.TheDate.AddDays(1).ToString("yyyy'/'M'/'dd")" id="tomorrow">&gt;</a>
+</h1>
 
 <div class="container">
     <div class="row">
 
         @foreach (var foodItemGroup in Model.CalendarFoodItems)
         {
-            <h2>@foodItemGroup.Key</h2>
+            <div id="MealHeader">
+                <h2>
+                    @foodItemGroup.Key
+                                <a style="display:inline" href="/CalendarFood/Create/@Model.TheDateText/@foodItemGroup.Id">
+                                    <i class="fa fa-plus fa-xs"></i>
+                                </a>
+                </h2>
+            </div>
 
             @if (foodItemGroup.Values.Count() != 0)
             {
@@ -61,6 +66,7 @@
                                 <th>Proteins</th>
                                 <th>Energy per 100gr</th>
                                 <th>Weight</th>
+                                <th></th>
                             </tr>
                         </thead>
 
@@ -77,6 +83,29 @@
                                     <td><h5 class="proteinValue">@Html.DisplayFor(modelItem => item.Food.Protein)</h5></td>
                                     <td><h5>@Html.DisplayFor(modelItem => item.Food.Energy)</h5></td>
                                     <td><h5>@Html.DisplayFor(modelItem => item.Food.Weight)</h5></td>
+                                    <td>
+                                        <form asp-action="Delete" asp-controller="CalendarFood" asp-route-id="@item.CalendarFoodItemID">
+                                            @{
+                                                var back = @Model.TheDateText + '/' + item.Meal.MealID;
+                                                //if (@Model.queryString != null && Model.queryString != "")
+                                                //{
+                                                //    back += '/' + @Model.queryString;
+                                                //}
+                                            }
+                                            <input id="back"
+                                                   name="back"
+                                                   type="hidden"
+                                                   value="@back" />
+
+                                            <button type="submit">
+                                                <span class="fa-stack">
+                                                    <i class="fas fa-circle fa-stack-2x text-danger "></i>
+                                                    <i class="fa fa-minus fa-stack-1x " style="color:white"></i>
+                                                    <i class="fa fa-minus fa-stack-1x " style="color:white"></i>
+                                                </span>
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
                             </tbody>
                         }
@@ -89,12 +118,5 @@
                     <p>No values</p>
                     }
                     }
-
                 </div>
-
-
-
-
-
-            </div>
-
+        </div>

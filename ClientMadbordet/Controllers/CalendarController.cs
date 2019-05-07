@@ -18,16 +18,20 @@ namespace ClientMadbordet.Controllers
             this.calendarDatabase = new CalendarContext(calendaroptions.Options);
         }
 
-        public ActionResult Index(int year = 0, int month = 0, int day = 0)
+        public ActionResult Index(int year, int month, int day )
         {
             DateTime myDate = GetMyDate(year, month, day);
             IQueryable<MealWithFoodItemsViewModel<CalendarFoodItem, string>> calendarFoodItems = GetFoodItemsInMeals(myDate);
             var calendarMeals = this.calendarDatabase.Meals;
-            CalendarViewModel cvm = new CalendarViewModel();
-            cvm.CalendarFoodItems = calendarFoodItems;
-            cvm.Meals = calendarMeals;
-            cvm.TheDate = myDate;
-            cvm.TheDateText = myDate.Year + "/" + myDate.Month + "/" + myDate.Day;
+
+            CalendarViewModel cvm = new CalendarViewModel()
+            {
+                CalendarFoodItems = calendarFoodItems,
+                Meals = calendarMeals,
+                TheDate = myDate,
+                TheDateText = myDate.Year + "/" + myDate.Month + "/" + myDate.Day
+            };
+            
             return View(cvm);
         }
 
@@ -35,7 +39,7 @@ namespace ClientMadbordet.Controllers
         {
             var calendarFoodItems =
                 from calendarItem in calendarDatabase.FoodItems.Include(fi => fi.Food).Include(fi => fi.Meal)
-                join meal in calendarDatabase.Meals on calendarItem.MealID_fk equals meal.MealID
+                join meal in calendarDatabase.Meals on calendarItem.Meal.MealID equals meal.MealID
                 where calendarItem.CalendarDate.Date == myDate.Date
                 group calendarItem by calendarItem.Meal.Name
                 into calendarGroup
@@ -47,39 +51,18 @@ namespace ClientMadbordet.Controllers
             return calendarFoodItems;
         }
 
-
         private IQueryable<MealWithFoodItemsViewModel<CalendarFoodItem, string>> GetFoodItemsInMeals(DateTime myDate)
         {
-            //var calendarFoodItems =
-            //                            from calendarItem in calendarDatabase.FoodItems.Include(fi => fi.Food).Include(fi => fi.Meal)
-            //                            join meal in calendarDatabase.Meals on calendarItem.MealID_fk equals meal.MealID into me
-            //                            from meal in me.DefaultIfEmpty()
-            //                            select new
-            //                            {
-            //                                calenderItems = calendarItem,
-            //                                meals = me
-            //                            };
-
-            //var calendarFoodItems =
-
-            //    from meal in calendarDatabase.Meals
-            //    join calendarItem in calendarDatabase.FoodItems on meal.MealID equals calendarItem.MealID_fk into ci
-            //    from calendarItem in ci.DefaultIfEmpty()
-            //    select new MealCalendarFoodItemGroup<CalendarFoodItem, string>
-            //    {
-            //        Key = meal.Name,
-            //        Values = ci
-            //    };
-
             var cfi = calendarDatabase.FoodItems.Where(c => c.CalendarDate.Date == myDate.Date).Include(f=>f.Food).Include(m=>m.Meal);
             var calendarFoodItems =
                 from meal in calendarDatabase.Meals
-                join calendarItem in cfi on meal.MealID equals calendarItem.MealID_fk               
+                join calendarItem in cfi on meal.MealID equals calendarItem.Meal.MealID               
                 into ci
                 select new MealWithFoodItemsViewModel<CalendarFoodItem, string>
                 {
                     Key = meal.Name,
-                    Values = ci
+                    Values = ci,
+                    Id = meal.MealID
                 };
             return calendarFoodItems;
         }
@@ -102,13 +85,6 @@ namespace ClientMadbordet.Controllers
 
             return myDate;
         }
-
-
-        //public IActionResult Index()
-        //{
-        //    var allFoods = fooddb.Foods;
-        //    return View(allFoods);
-        //}
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

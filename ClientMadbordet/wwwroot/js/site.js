@@ -70,4 +70,13 @@ $(document).ready(function () {
         }
     });
 
+
+    //var yesterday = $('#yesterday');
+    //var tomorrow = $('#tomorrow');
+    //var today = $('#today');
+
+    //tomorrow.on("click", function () {
+    //    yesterday
+    //});
+
 });  

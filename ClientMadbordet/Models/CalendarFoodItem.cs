@@ -17,21 +17,13 @@ namespace ClientMadbordet.Models
         public DateTime CalendarDate { get; set; }
 
         [Required]
-        public int FoodID_fk { get; set; }
-
-        [Required]
-        public int MealID_fk { get; set; }
-
-        [Required]
         public int Weight { get; set; }
 
-        [ForeignKey("FoodID_fk")]
+        //[Required]
+        //public int Pieces { get; set; }
+
         public virtual Food Food { get; set; }
-
-        [ForeignKey("MealID_fk")]
         public virtual Meal Meal { get; set; }
-
     }
-
 }
 

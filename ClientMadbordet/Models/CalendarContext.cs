@@ -18,7 +18,10 @@ namespace ClientMadbordet.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CalendarFoodItem>().ToTable("FoodItems");
+
+            modelBuilder.Entity<CalendarFoodItem>()
+                .ToTable("FoodItems");
+
             modelBuilder.Entity<Meal>().HasAlternateKey(m => m.Name);
         }
 

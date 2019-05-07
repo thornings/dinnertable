@@ -1,0 +1,91 @@
+﻿@model ClientMadbordet.ViewModels.CalendarFoodViewModel
+
+@{
+
+    ViewData["Title"] = "add some food";
+}
+
+@if (ViewData["Error"] != null)
+{
+    <div class="alert-danger">
+        <p><strong>Error:</strong> @ViewData["Error"].ToString()</p>
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="alert-success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+
+<h2>Add to @Model.DateFormatted - @Model.Meal.Name</h2>
+<div class="row">
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr class="bg-primary">
+
+                    <th>Food</th>
+                    <th class="">energy</th>
+                    <th>Weight</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            @foreach (CalendarFoodItem foodItem in Model.FoodItems)
+            {
+                <tbody>
+                    <tr id="tableline">
+                        <td><h5>@Html.DisplayFor(modelItem => foodItem.Food.Name)</h5></td>
+                        <td><h5>@Html.DisplayFor(modelItem => foodItem.Food.Energy)</h5></td>
+                        <td><h5>@Html.DisplayFor(modelItem => foodItem.Food.Weight)</h5></td>
+                        <td>
+                            <form asp-action="Delete" asp-route-id="@foodItem.CalendarFoodItemID">
+                                @{
+                                    var back = @Model.DateFormatted + '/' + @Model.Meal.MealID;
+                                    if (@Model.queryString != null && Model.queryString != "")
+                                    {
+                                        back += '/' + @Model.queryString;
+                                    }
+                                }
+                                <input id="back"
+                                       name="back"
+                                       type="hidden"
+                                       value="@back" />
+
+                                <button type="submit">
+                                    <span class="fa-stack">
+                                        <i class="fas fa-circle fa-stack-2x text-danger "></i>
+                                        <i class="fa fa-minus fa-stack-1x " style="color:white"></i>
+                                        <i class="fa fa-minus fa-stack-1x " style="color:white"></i>
+                                    </span>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            }
+        </table>
+    </div>
+
+    <hr />
+
+    <h4>Foods</h4>
+    <div class="row">
+        @foreach (Food foodItem in Model.Foods)
+        {
+            <a href="/CalendarFood/Create/@Model.DateFormatted/@foodItem.FoodID/@Model.Meal.MealID">
+                <div class="Card" style="margin: 10px; border: solid 1px black;">
+                    <div class="card-body" style="margin: 4px">
+                        <h5 class="card-title">@foodItem.Name</h5>
+                        <p class="card-subtitle mb-2 text-muted">@foodItem.Energy</p>
+                    </div>
+                </div>
+            </a>
+        }
+    </div>
+    <a href="/Calendar">Back to List</a>
+
+
+</div>
