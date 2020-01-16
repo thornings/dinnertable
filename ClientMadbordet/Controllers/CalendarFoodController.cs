@@ -10,12 +10,11 @@ namespace ClientMadbordet.Controllers
 {
     public class CalendarFoodController : Controller
     {
-        private CalendarContext calendarDatabase;
+        private readonly CalendarContext CalendarDatabase;
 
-        public CalendarFoodController()
+        public CalendarFoodController(CalendarContext db)
         {
-            var calendarOptions = new DbContextOptionsBuilder<CalendarContext>();
-            this.calendarDatabase = new CalendarContext(calendarOptions.Options);
+            this.CalendarDatabase = db;
         }
 
         public IActionResult Index()
@@ -24,57 +23,59 @@ namespace ClientMadbordet.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Add(int year, int month, int day, int mealId, string searchString = "")
+        public async Task<IActionResult> Add(int year, int month, int day, int mealId)
         {
-            CalendarFoodViewModel viewModel = new CalendarFoodViewModel();
-
-            viewModel.queryString = searchString;
-
-            viewModel.Meal = calendarDatabase.Meals.Find(mealId);
+            CalendarFoodViewModel viewModel = new CalendarFoodViewModel
+            {
+                Meal = CalendarDatabase.Meals.Find(mealId)
+            };
             if (viewModel.Meal == null)
             {
                 return RedirectToAction("/");
             }
 
-            var date = new DateTime(year, month, day);
-            if (date == null)
+            DateTime date = DateTime.Now; // default
+
+            try
             {
-                return RedirectToAction("/calendar");
+                date = new DateTime(year, month, day);
+                if (date == null)
+                {
+                    return RedirectToAction("/calendar");
+                }
+
             }
+            catch (Exception)
+            {
+                return Redirect("/calendar"); 
+            }
+
             viewModel.DateFormatted = date.Year + "/" + date.Month + "/" + date.Day;
             viewModel.Date = date;
 
             var foods =
-                from m in calendarDatabase.Foods
+                from m in this.CalendarDatabase.Foods
                 select m;
 
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                foods = foods.Where(s => s.Name.Contains(searchString));
-            }
-            else
-            {
-                foods = calendarDatabase.Foods;
-            }
-
             viewModel.Foods = await foods.ToListAsync();
-            viewModel.FoodItems = calendarDatabase.FoodItems.Where(fi => fi.CalendarDate.Date == date.Date && fi.Meal.MealID == mealId );
+            viewModel.FoodItems = this.CalendarDatabase.FoodItems.Where(fi => fi.CalendarDate.Date == date.Date && fi.Meal.MealID == mealId );
+
+            var foodItems = viewModel.FoodItems.ToList();
+            viewModel.TotalWeight = foodItems.Sum(f => f.Weight);
+            viewModel.TotalEnergy = foodItems.Sum(f => ((decimal)f.Weight / 100) * f.Food.Energy);
 
             return View(viewModel);
         }
 
 
-        //[Bind]
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
         [HttpGet]
         public IActionResult Create(int year, int month, int day, int foodId, int mealId)
         {
             var date = new DateTime(year, month, day);
             ViewData["Date"] = date;
 
-            Food food = calendarDatabase.Foods.Find(foodId);
-            Meal meal = calendarDatabase.Meals.Find(mealId);
+            Food food = CalendarDatabase.Foods.Find(foodId);
+            Meal meal = CalendarDatabase.Meals.Find(mealId);
 
             if (food == null || meal == null)
             {
@@ -91,8 +92,8 @@ namespace ClientMadbordet.Controllers
                 CalendarDate = date
             };
 
-            calendarDatabase.FoodItems.Add(foodItem);
-            calendarDatabase.SaveChanges();
+            CalendarDatabase.FoodItems.Add(foodItem);
+            CalendarDatabase.SaveChanges();
 
             TempData["Success"] = "Created.";
 
@@ -104,7 +105,7 @@ namespace ClientMadbordet.Controllers
         [HttpDelete]        
         public IActionResult Delete(string back, int id)
         { 
-            CalendarFoodItem foodItem = calendarDatabase.FoodItems.Find(id);
+            CalendarFoodItem foodItem = CalendarDatabase.FoodItems.Find(id);
             if (foodItem == null)
             {
                 return NotFound();
@@ -118,10 +119,53 @@ namespace ClientMadbordet.Controllers
         public ActionResult DeleteConfirmed(string back, int id)
         {
             back = Request.Form["back"];
-            CalendarFoodItem foodItem = calendarDatabase.FoodItems.Find(id);
-            calendarDatabase.FoodItems.Remove(foodItem);
-            calendarDatabase.SaveChanges();
+            CalendarFoodItem foodItem = CalendarDatabase.FoodItems.Find(id);
+            CalendarDatabase.FoodItems.Remove(foodItem);
+            CalendarDatabase.SaveChanges();
             return Redirect("/CalendarFood/Add/" + back);
         }
+
+        [HttpPost]
+        public JsonResult HelloThorning(string search="")
+        {
+
+            var FoodItems = this.CalendarDatabase.Foods.Where(f => f.Name.Contains(search));
+            var data = new { status = "ok", result = FoodItems };
+            return Json(data);
+        }
+
+        [HttpPost]
+        public IActionResult SearchForFoods([FromBody] SearchModel searchModel)
+        {
+            var allFoods = this.CalendarDatabase.Foods;
+            var searchedFoodItems = allFoods.ToList();
+
+            if (searchModel.SearchValue!="")
+            {
+                searchedFoodItems = allFoods.Where(f => f.Name.Contains(searchModel.SearchValue)).ToList();                
+            }
+
+            var calendarFoods = new ClientMadbordet.ViewModels.CalendarFoodsViewModel();
+            calendarFoods.MealId = searchModel.MealId;
+            calendarFoods.Foods = searchedFoodItems;
+            calendarFoods.DateFormatted = searchModel.FormattedDate;
+
+            return PartialView("_FoodsResults", calendarFoods);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateCalendarFoodWeight([FromBody] CalendarFoodUpdateModel calendarFoodUpdateModel)
+        {
+            var calendarFoodItem = this.CalendarDatabase.FoodItems
+                    .Where(f => f.CalendarFoodItemID == calendarFoodUpdateModel.CalendarFoodItemId).First();
+            var newWeight = calendarFoodUpdateModel.NewWeight;
+            calendarFoodItem.Weight = newWeight;
+            this.CalendarDatabase.SaveChanges();
+            return Content(newWeight+""); 
+        }
     }
+
+
+
+    
 }

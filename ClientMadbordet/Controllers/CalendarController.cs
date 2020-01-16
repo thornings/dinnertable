@@ -12,15 +12,23 @@ namespace ClientMadbordet.Controllers
     {
         private CalendarContext calendarDatabase;
 
-        public CalendarController()
+        public CalendarController(CalendarContext db)
         {
-            var calendaroptions = new DbContextOptionsBuilder<CalendarContext>();
-            this.calendarDatabase = new CalendarContext(calendaroptions.Options);
+            this.calendarDatabase = db;
         }
 
         public ActionResult Index(int year, int month, int day )
         {
-            DateTime myDate = GetMyDate(year, month, day);
+            DateTime myDate = DateTime.Now;
+            try
+            {
+                myDate = GetMyDate(year, month, day);
+            }
+            catch (Exception)
+            {
+                myDate = DateTime.Now;
+            }
+
             IQueryable<MealWithFoodItemsViewModel<CalendarFoodItem, string>> calendarFoodItems = GetFoodItemsInMeals(myDate);
             var calendarMeals = this.calendarDatabase.Meals;
 
@@ -82,8 +90,7 @@ namespace ClientMadbordet.Controllers
             {
                 myDate = new DateTime(year, month, day, 0, 0, 0);
             }
-
-            return myDate;
+           return myDate;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -91,5 +98,6 @@ namespace ClientMadbordet.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
     }
 }

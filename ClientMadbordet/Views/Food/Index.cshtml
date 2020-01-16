@@ -37,7 +37,13 @@
                         <td><h5>@Html.DisplayFor(modelItem => food.Weight)</h5></td>
 
                         <td>
-                            <a asp-action="Edit" asp-route-id="@food.FoodID">Edit</a> |
+
+                            <a asp-controller="Food"
+                               asp-action="Edit"
+                               asp-route-id="@food.FoodID">
+                                Edit
+                            </a>
+
                             <a asp-action="Delete" asp-route-id="@food.FoodID">Remove</a>
                         </td>
                     </tr>

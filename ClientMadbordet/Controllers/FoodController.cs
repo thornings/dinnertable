@@ -9,10 +9,9 @@ namespace ClientMadbordet.Controllers
     {
         CalendarContext CalendarDb;
 
-        public FoodController()
+        public FoodController(CalendarContext db)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<CalendarContext>();
-            CalendarDb = new CalendarContext(optionsBuilder.Options);
+            CalendarDb = db;
         }
 
         public IActionResult Index()
@@ -58,12 +57,8 @@ namespace ClientMadbordet.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind]Food food)
+        public IActionResult Edit([Bind]Food food)
         {
-            if (id != food.FoodID)
-            {
-                return NotFound();
-            }
             if (ModelState.IsValid)
             {
                 CalendarDb.Foods.Update(food);

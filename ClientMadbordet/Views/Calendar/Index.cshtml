@@ -78,11 +78,11 @@
                                         <canvas class="myChart" style="padding: 5px;margin: auto; width: 80px; height: 50px; display: inline-block; "></canvas>
                                     </td>
                                     <td><h5>@Html.DisplayFor(modelItem => item.Food.Name)</h5></td>
-                                    <td><h5 class="fatValue">@Html.DisplayFor(modelItem => item.Food.Fat)</h5></td>
-                                    <td><h5 class="carbValue">@Html.DisplayFor(modelItem => item.Food.Carb)</h5></td>
-                                    <td><h5 class="proteinValue">@Html.DisplayFor(modelItem => item.Food.Protein)</h5></td>
+                                    <td><h5 class="fatValue">@Model.CalculateSpecials(item.Food.Fat, item.Weight)</h5></td>
+                                    <td><h5 class="carbValue">@Model.CalculateSpecials(item.Food.Carb, item.Weight)</h5></td>
+                                    <td><h5 class="proteinValue">@Model.CalculateSpecials(item.Food.Protein, item.Weight)</h5></td>
                                     <td><h5>@Html.DisplayFor(modelItem => item.Food.Energy)</h5></td>
-                                    <td><h5>@Html.DisplayFor(modelItem => item.Food.Weight)</h5></td>
+                                    <td><h5>@Html.DisplayFor(modelItem => item.Weight)</h5></td>
                                     <td>
                                         <form asp-action="Delete" asp-controller="CalendarFood" asp-route-id="@item.CalendarFoodItemID">
                                             @{

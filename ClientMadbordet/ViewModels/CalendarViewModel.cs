@@ -11,5 +11,11 @@ namespace ClientMadbordet.ViewModels
         public IQueryable<Meal> Meals { get; set; }
         public DateTime TheDate { get; set; }
         public string TheDateText { get; set; }
+
+        public string CalculateSpecials(decimal special, int weight)
+        {
+            return (( (decimal)weight / 100 ) * special) + "";
+        }
+
     }
 }

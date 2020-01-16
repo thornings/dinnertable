@@ -13,5 +13,7 @@ namespace ClientMadbordet.ViewModels
         public List<Food> Foods;
         public IQueryable<CalendarFoodItem> FoodItems;
         public string queryString { get; set; }
+        public int TotalWeight { get; set; }
+        public decimal TotalEnergy { get; set; }
     }
 }

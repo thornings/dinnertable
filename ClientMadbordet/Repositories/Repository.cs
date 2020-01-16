@@ -6,7 +6,6 @@ using System.Linq.Expressions;
 
 namespace ClientMadbordet.Repositories
 {
-    
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : Class 
     {
         protected readonly DbContext Context;

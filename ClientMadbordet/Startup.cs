@@ -36,12 +36,17 @@ namespace ClientMadbordet
             });
 
             services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));
+
 
             services.AddDbContext<CalendarContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("MadbordetDatabase")));
+
+            //var optionsBuilder = new DbContextOptionsBuilder<CalendarContext>();
+            //var test = new CalendarContext(optionsBuilder.Options);
+            //services.AddTransient<CalendarContext>(test);
 
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -71,9 +76,13 @@ namespace ClientMadbordet
 
             app.UseMvc(routes =>
             {
+
+
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Calendar}/{action=Index}/{year:int}/{month:int}/{day:int}");
+                    template: "{controller}/{action}",
+                    defaults: new { controller = "Calendar", action = "Index" });
+
 
                 routes.MapRoute(
                     name: "food",
@@ -81,7 +90,7 @@ namespace ClientMadbordet
 
                 routes.MapRoute(
                    name: "meal",
-                   template: "{controller=Meal}/{action=Index}/{id?}");
+                   template: "{controller=Meal}/{action=Index}");
 
                 routes.MapRoute(
                  name: "calendarfoodCreate",
@@ -89,12 +98,18 @@ namespace ClientMadbordet
 
                 routes.MapRoute(
                  name: "calendarfoodAdd",
-                 template: "{controller=CalendarFood}/{action=Add}/{year?}/{month?}/{day?}/{mealId?}/{search?}");
+                 template: "{controller=CalendarFood}/{action=Add}/{year?}/{month?}/{day?}/{mealId?}");
 
                 routes.MapRoute(
                  name: "calendarfoodDelete",
                  template: "{controller=CalendarFood}/{action=Delete}/{back}/{foodItemId}");
-            });
+
+                routes.MapRoute(
+                    name: "Calendar",
+                    template: "{controller=Calendar}/{action=Index}/{year:int}/{month:int}/{day:int}"
+                );
+
+        });
         }
     }
 }
