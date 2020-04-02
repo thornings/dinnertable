@@ -13,5 +13,7 @@ namespace ClientMadbordet.Data
             : base(options)
         {
         }
+
+
     }
 }

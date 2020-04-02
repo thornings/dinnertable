@@ -3,36 +3,6 @@
 @{
     ViewData["Title"] = "Today";
 }
-@*
-        <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog full-screen" role="document">
-                <div class="modal-content">
-                   <div class="modal-header">
-                        <h5 class="modal-title">Add food</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true"><i class="fa fa-plus fa-2x fa-rotate-45"></i></span>
-                        </button>
-                    </div
-    <div class="modal-body p-4" id="result">
-        <div class="row">
-            @foreach (var meal in Model.Meals)
-            {
-                <div class="col-sm-6 col-lg-3">
-                    <a href="/CalendarFood/Add/@Model.TheDateText/@meal.MealID"
-                       title="Add food @Html.DisplayFor(modelItem => meal.Name) ">
-                        @Html.DisplayFor(modelItem => meal.Name)
-                    </a>
-                </div>
-            }
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
-    </div>
-            </div>
-        </div>
-    </div>
-    >*@
 
 <h1>
     <a href="/Calendar/index/@Model.TheDate.AddDays(-1).ToString("yyyy'/'M'/'dd")" id="yesterday">&lt;</a>

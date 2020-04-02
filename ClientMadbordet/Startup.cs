@@ -44,13 +44,6 @@ namespace ClientMadbordet
                 options.UseSqlServer(
                     Configuration.GetConnectionString("MadbordetDatabase")));
 
-            //var optionsBuilder = new DbContextOptionsBuilder<CalendarContext>();
-            //var test = new CalendarContext(optionsBuilder.Options);
-            //services.AddTransient<CalendarContext>(test);
-
-            //services.AddDefaultIdentity<AppUser>()
-            //    .AddRoles<AppRole>()
-            //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddIdentity<AppUser, AppRole>()
                .AddDefaultUI()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
