@@ -48,8 +48,13 @@ namespace ClientMadbordet
             //var test = new CalendarContext(optionsBuilder.Options);
             //services.AddTransient<CalendarContext>(test);
 
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            //services.AddDefaultIdentity<AppUser>()
+            //    .AddRoles<AppRole>()
+            //    .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddIdentity<AppUser, AppRole>()
+               .AddDefaultUI()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -76,13 +81,10 @@ namespace ClientMadbordet
 
             app.UseMvc(routes =>
             {
-
-
                 routes.MapRoute(
                     name: "default",
                     template: "{controller}/{action}",
                     defaults: new { controller = "Calendar", action = "Index" });
-
 
                 routes.MapRoute(
                     name: "food",

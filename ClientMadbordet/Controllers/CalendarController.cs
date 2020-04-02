@@ -5,16 +5,18 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using ClientMadbordet.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClientMadbordet.Controllers
 {
+    [Authorize]
     public class CalendarController : Controller
     {
-        private CalendarContext calendarDatabase;
+        private CalendarContext _calendarDatabase;
 
-        public CalendarController(CalendarContext db)
+        public CalendarController(CalendarContext dbc)
         {
-            this.calendarDatabase = db;
+            this._calendarDatabase = dbc;
         }
 
         public ActionResult Index(int year, int month, int day )
@@ -30,7 +32,7 @@ namespace ClientMadbordet.Controllers
             }
 
             IQueryable<MealWithFoodItemsViewModel<CalendarFoodItem, string>> calendarFoodItems = GetFoodItemsInMeals(myDate);
-            var calendarMeals = this.calendarDatabase.Meals;
+            var calendarMeals = this._calendarDatabase.Meals;
 
             CalendarViewModel cvm = new CalendarViewModel()
             {
@@ -46,8 +48,8 @@ namespace ClientMadbordet.Controllers
         private IQueryable<MealWithFoodItemsViewModel<CalendarFoodItem, string>> GetFoodItems(DateTime myDate)
         {
             var calendarFoodItems =
-                from calendarItem in calendarDatabase.FoodItems.Include(fi => fi.Food).Include(fi => fi.Meal)
-                join meal in calendarDatabase.Meals on calendarItem.Meal.MealID equals meal.MealID
+                from calendarItem in _calendarDatabase.FoodItems.Include(fi => fi.Food).Include(fi => fi.Meal)
+                join meal in _calendarDatabase.Meals on calendarItem.Meal.MealID equals meal.MealID
                 where calendarItem.CalendarDate.Date == myDate.Date
                 group calendarItem by calendarItem.Meal.Name
                 into calendarGroup
@@ -61,10 +63,10 @@ namespace ClientMadbordet.Controllers
 
         private IQueryable<MealWithFoodItemsViewModel<CalendarFoodItem, string>> GetFoodItemsInMeals(DateTime myDate)
         {
-            var cfi = calendarDatabase.FoodItems.Where(c => c.CalendarDate.Date == myDate.Date).Include(f=>f.Food).Include(m=>m.Meal);
+            var calendarFoodItem = _calendarDatabase.FoodItems.Where(c => c.CalendarDate.Date == myDate.Date).Include(f=>f.Food).Include(m=>m.Meal);
             var calendarFoodItems =
-                from meal in calendarDatabase.Meals
-                join calendarItem in cfi on meal.MealID equals calendarItem.Meal.MealID               
+                from meal in _calendarDatabase.Meals
+                join calendarItem in calendarFoodItem on meal.MealID equals calendarItem.Meal.MealID               
                 into ci
                 select new MealWithFoodItemsViewModel<CalendarFoodItem, string>
                 {
