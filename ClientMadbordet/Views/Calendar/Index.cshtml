@@ -4,11 +4,14 @@
     ViewData["Title"] = "Today";
 }
 
-<h1 class="text-center bg-white p-5">
-    <a href="/Calendar/index/@Model.TheDate.AddDays(-1).ToString("yyyy'/'M'/'dd")" id="yesterday">&lt;</a>
-    <span class="mx-md-5 mx-3" id="today">@String.Format("{0:dddd, d. MMMM  yyyy}", @Model.TheDate)</span>
-    <a href="/Calendar/index/@Model.TheDate.AddDays(1).ToString("yyyy'/'M'/'dd")" id="tomorrow">&gt;</a>
-</h1>
+    <h1 class="text-center bg-white p-5">
+        <a href="/Calendar/index/@Model.TheDate.AddDays(-1).ToString("yyyy'/'M'/'dd")" id="yesterday">&lt;</a>
+        
+        <span class="mx-md-5 mx-3 d-sm-inline d-md-none " id="today">@Model.TheDate.ToString("dd-MM")</span>
+        <span class="mx-md-5 mx-3 d-none d-md-inline" id="today">@String.Format("{0:dddd, d. MMMM  yyyy}", @Model.TheDate)</span>
+        
+        <a href="/Calendar/index/@Model.TheDate.AddDays(1).ToString("yyyy'/'M'/'dd")" id="tomorrow">&gt;</a>
+    </h1>
 
 <div class="bg-secondary">
     <div class="row">

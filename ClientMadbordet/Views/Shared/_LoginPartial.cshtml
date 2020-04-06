@@ -8,21 +8,14 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Calendar", new { area = "" })" method="post" id="logoutForm" class="navbar-right">
-        <ul class="nav navbar-nav navbar-right">
-            <li class="nav-item">
-                <a class="navbar-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@user.UserName</a>
-            </li>
-            <li class="navbar-item">
-                <button type="submit" class="navbar-link">Logout</button>
-            </li>
-        </ul>
+    <a class="nav-item  nav-link px-3" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">About Me</a>
+    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Calendar", new { area = "" })" method="post" id="logoutForm" class="ml-auto">
+        <button class="btn btn-secondary" type="submit"><i class="fas fa-sign-out-alt"></i></button>
     </form>
+
 }
 else
 {
-    <ul class="nav navbar-nav navbar-right">
-        <li><a asp-area="Identity" asp-page="/Account/Register">Register</a></li>
-        <li><a asp-area="Identity" asp-page="/Account/Login">Login</a></li>
-    </ul>
+    <a class="nav-item nav-link px-3" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    <a class="btn btn-secondary" asp-area="Identity" asp-page="/Account/Login" title="LOGIN"><i class="fas fa-sign-in-alt"></i></a>
 }
