@@ -10,11 +10,11 @@
 {
     <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Calendar", new { area = "" })" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@user.UserName!</a>
+            <li class="nav-item">
+                <a class="navbar-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@user.UserName</a>
             </li>
-            <li>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link">Logout</button>
+            <li class="navbar-item">
+                <button type="submit" class="navbar-link">Logout</button>
             </li>
         </ul>
     </form>
