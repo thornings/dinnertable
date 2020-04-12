@@ -20,15 +20,15 @@ $(document).ready(function () {
     /* CHART */
     var canvasElements = $('.myChart');
 
-    canvasElements.each(function(){
+    canvasElements.each(function () {        
         var canvasElement = $(this);
         var ctx = canvasElement.get(0).getContext('2d');
         ctx.fillStyle = "red";
         ctx.fillRect(0, 0, canvasElement.width, canvasElement.height);
 
-        var proteinValue = parseFloat(canvasElement.closest('#tableline').find(".proteinValue").text());
-        var carbValue = parseFloat(canvasElement.closest('#tableline').find(".carbValue").text());
-        var fatValue = parseFloat(canvasElement.closest('#tableline').find(".fatValue").text());
+        var proteinValue = parseFloat(canvasElement.data("proteins"));
+        var carbValue = parseFloat(canvasElement.data("carbs"));
+        var fatValue = parseFloat(canvasElement.data("fats"));
 
         if (proteinValue != '0' && carbValue != '0' && fatValue != '0') {
             var labels = ['protein', 'carbs', 'fat'];

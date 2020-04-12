@@ -12,38 +12,6 @@ body {
     padding-right: 15px;
 }
 
-/* Carousel */
-.carousel-caption p {
-    font-size: 20px;
-    line-height: 1.4;
-}
-
-/* Make .svg files in the carousel display properly in older browsers */
-/*.carousel-inner .item img[src$=".svg"] {
-    width: 100%;
-}*/
-
-/* QR code generator */
-#qrCode {
-    margin: 15px;
-}
-
-/* Hide/rearrange for smaller screens */
-@media screen and (max-width: 767px) {
-    /* Hide captions */
-    .carousel-caption {
-        display: none;
-    }
-}
-
-.fa-rotate-45 {
-    -webkit-transform: rotate(45deg);
-    -moz-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    -o-transform: rotate(45deg);
-    transform: rotate(45deg);
-}
-
 #calendarMenuButton {
     position: fixed;
     right: 0;  
@@ -55,4 +23,14 @@ body {
     margin: 0;
     top: 0;
     right: 0;
+}
+
+.myChart {
+    width: 40px;
+    height:40px;
+}
+
+.myChart:hover{
+    width: 80px;
+    height: 80px;
 }
