@@ -2,15 +2,8 @@
 body {
     padding-top: 50px;
     padding-bottom: 20px;
-    background-color: #d9dae1;
 }
 
-/* Wrapping element */
-/* Set some basic padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
-}
 
 #calendarMenuButton {
     position: fixed;
@@ -26,11 +19,8 @@ body {
 }
 
 .myChart {
-    width: 40px;
-    height:40px;
+    width: 100px;
+    height:50px;
 }
 
-.myChart:hover{
-    width: 80px;
-    height: 80px;
-}
+

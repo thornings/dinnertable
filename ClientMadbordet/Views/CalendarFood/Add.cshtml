@@ -43,52 +43,52 @@
                 </tr>
             </thead>
             <tbody>
-                
+
                 @foreach (CalendarFoodItem foodItem in Model.FoodItems)
                 {
 
-                <tr id="tableline">
-                    <td><h5>@Html.DisplayFor(modelItem => foodItem.Food.Name)</h5></td>
-                    @{ var correctEnergy = ((decimal)foodItem.Weight / 100) * foodItem.Food.Energy; }
-                    <td><h5>@Html.DisplayFor(modelItem => foodItem.Food.Energy) / @String.Format("{0:0.00}", correctEnergy)</h5></td>
-                    <td>
-                        <h5>
+                    <tr id="tableline">
+                        <td><h5>@Html.DisplayFor(modelItem => foodItem.Food.Name)</h5></td>
+                        @{ var correctEnergy = ((decimal)foodItem.Weight / 100) * foodItem.Food.Energy; }
+                        <td><h5>@Html.DisplayFor(modelItem => foodItem.Food.Energy) / @String.Format("{0:0.00}", correctEnergy)</h5></td>
+                        <td>
+                            <h5>
 
-                            <input class="calendarFoodWeight" id="calendarFoodWeight-@foodItem.CalendarFoodItemID"
-                                   type="text"
-                                   data-calendarfooditemid="@foodItem.CalendarFoodItemID"
-                                   value="@Html.DisplayFor(modelItem => foodItem.Weight)" />
-                        </h5>
-                    <td>
-                        <form asp-action="Delete" asp-route-id="@foodItem.CalendarFoodItemID">
-                            @{
-                                var back = @Model.DateFormatted + '/' + @Model.Meal.MealID;
-                                if (@Model.queryString != null && Model.queryString != "")
-                                {
-                                    back += '/' + @Model.queryString;
+                                <input class="calendarFoodWeight" id="calendarFoodWeight-@foodItem.CalendarFoodItemID"
+                                       type="text"
+                                       data-calendarfooditemid="@foodItem.CalendarFoodItemID"
+                                       value="@Html.DisplayFor(modelItem => foodItem.Weight)" />
+                            </h5>
+                        <td>
+                            <form asp-action="Delete" asp-route-id="@foodItem.CalendarFoodItemID">
+                                @{
+                                    var back = @Model.DateFormatted + '/' + @Model.Meal.MealID;
+                                    if (@Model.queryString != null && Model.queryString != "")
+                                    {
+                                        back += '/' + @Model.queryString;
+                                    }
                                 }
-                            }
-                            <input id="back"
-                                   name="back"
-                                   type="hidden"
-                                   value="@back" />
+                                <input id="back"
+                                       name="back"
+                                       type="hidden"
+                                       value="@back" />
 
-                            <button type="submit">
-                                <span class="fa-stack">
-                                    <i class="fa fa-minus"></i>
-                                </span>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
+                                <button type="submit">
+                                    <span class="fa-stack">
+                                        <i class="fa fa-minus"></i>
+                                    </span>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
                 }
                 <tr>
                     <td><strong>Totals</strong></td>
-                    <td><strong>@String.Format("{0:0.00}",Model.TotalEnergy)</strong></td>
-                    <td><strong>@String.Format("{0:0.00}",Model.TotalWeight)</strong></td>
+                    <td><strong>@String.Format("{0:0.00}", Model.TotalEnergy)</strong></td>
+                    <td><strong>@String.Format("{0:0.00}", Model.TotalWeight)</strong></td>
                 </tr>
             </tbody>
-            
+
         </table>
     </div>
 
@@ -96,7 +96,7 @@
 
     <h4>Foods</h4>
     <section id="searchSection">
-        <input id="calendarFoodSearchBox" data-mealid="@Model.Meal.MealID" data-dateformatted="@Model.DateFormatted"  type="text" placeholder="search" style="width: 1200px" />
+        <input id="calendarFoodSearchBox" data-mealid="@Model.Meal.MealID" data-dateformatted="@Model.DateFormatted" type="text" placeholder="search" style="width: 1200px" />
     </section>
 
     <section id="foodsSection">
@@ -114,5 +114,8 @@
         </div>
     </section>
 
-    <a href="/Calendar">Back to List</a>
+
+</div>
+<div class="row mt-5">
+    <a class="btn btn-info" href="/Calendar">Back to List</a>
 </div>

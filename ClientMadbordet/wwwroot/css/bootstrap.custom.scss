@@ -1,0 +1,81 @@
+﻿$primary: #97b48f; 
+$secondary: #fffff1; 
+$light: #e9eeea; 
+$dark: #3d4445; 
+$white: #FFF;
+
+nav.navbar {
+    background: linear-gradient($secondary, $primary)
+}
+
+$theme-colors: ( 
+    "primary-green": $primary,
+    "secondary": $secondary,
+    "light": $light,
+    "dark": $dark
+    );
+
+.movingarrow-parent > span {
+    position: absolute;
+    left: 0px;
+    font-weight: 300;
+    font-size: 0.5em;
+    line-height: 1em;
+    display: none;
+    z-index: 10;
+
+}
+
+.movingarrow-parent {
+    position: relative;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    font-weight: 100;
+}
+
+.movingarrow-parent:hover {
+    & > span {
+        margin-left: -150px;
+        display: inline;
+        animation: movearrow 3s;
+        animation-iteration-count: 1;
+    }
+}
+
+.totalsmenuitem {
+    width: 2.9em;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+    background-color: white;
+    transition: all 0.3s ease-in;
+}
+
+.totalsmenuitem:hover {
+    width: 30em;
+}
+
+
+@keyframes movearrow {
+    0% {
+        top: 0;
+        opacity: 0;
+    }
+
+    50% {
+        top: -30px;
+        opacity: 1;
+    }
+
+    100% {
+        top: 0;
+        opacity: 0;
+    }
+}
+
+
+
+@import "../lib/bootstrap/scss/bootstrap.scss";
+

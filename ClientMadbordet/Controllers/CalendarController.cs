@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using ClientMadbordet.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
 
 namespace ClientMadbordet.Controllers
 {
@@ -32,14 +33,28 @@ namespace ClientMadbordet.Controllers
             }
 
             IQueryable<MealWithFoodItemsViewModel<CalendarFoodItem, string>> calendarFoodItems = GetFoodItemsInMeals(myDate);
-            var calendarMeals = this._calendarDatabase.Meals;
+            var meals = this._calendarDatabase.Meals;
+
+            List<CalendarMealViewModel> calendarMealsViewModel = new List<CalendarMealViewModel>();
+            foreach (var cm in meals)
+            {
+                calendarMealsViewModel.Add(
+                    new CalendarMealViewModel()
+                    {
+                        Meal = cm,
+                        TotalCarbs = 12,
+                        TotalProteins = 14,
+                        TotalFats = 15
+                    }
+                );
+            }
 
             CalendarViewModel cvm = new CalendarViewModel()
             {
                 CalendarFoodItems = calendarFoodItems,
-                Meals = calendarMeals,
+                Meals = calendarMealsViewModel,
                 TheDate = myDate,
-                TheDateText = myDate.Year + "/" + myDate.Month + "/" + myDate.Day
+                TheDateText = myDate.Year + "/" + myDate.Month + "/" + myDate.Day,             
             };
             
             return View(cvm);
@@ -56,7 +71,8 @@ namespace ClientMadbordet.Controllers
                 select new MealWithFoodItemsViewModel<CalendarFoodItem, string>
                 {
                     Key = calendarGroup.Key,
-                    Values = calendarGroup
+                    Values = calendarGroup,
+
                 };
             return calendarFoodItems;
         }
@@ -66,13 +82,16 @@ namespace ClientMadbordet.Controllers
             var calendarFoodItem = _calendarDatabase.FoodItems.Where(c => c.CalendarDate.Date == myDate.Date).Include(f=>f.Food).Include(m=>m.Meal);
             var calendarFoodItems =
                 from meal in _calendarDatabase.Meals
-                join calendarItem in calendarFoodItem on meal.MealID equals calendarItem.Meal.MealID               
+                join calendarItem in calendarFoodItem on meal.MealID equals calendarItem.Meal.MealID
                 into ci
                 select new MealWithFoodItemsViewModel<CalendarFoodItem, string>
                 {
                     Key = meal.Name,
                     Values = ci,
-                    Id = meal.MealID
+                    Id = meal.MealID,
+                    TotalCarbs= (int)ci.Sum(x=>x.Food.Carb*(((decimal)x.Weight)/100)),
+                    TotalProteins = (int)ci.Sum(x=>x.Food.Protein*((decimal)x.Weight/100)),
+                    TotalFats = (int)ci.Sum(x=>x.Food.Fat*((decimal)x.Weight/100))
                 };
             return calendarFoodItems;
         }

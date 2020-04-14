@@ -7,6 +7,8 @@ namespace ClientMadbordet.ViewModels
         public K Key;
         public IEnumerable<T> Values;
         public int Id;
-
+        public int TotalCarbs;
+        public int TotalProteins;
+        public int TotalFats;
     }
 }

@@ -1,8 +1,0 @@
-﻿@import "bootstrap/functions";
-@import "bootstrap/variables";
-
-$theme-colors: (
-  secondary: $purple
-);
-
-@import "bootstrap";

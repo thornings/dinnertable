@@ -4,111 +4,96 @@
     ViewData["Title"] = "Today";
 }
 
-<h1 class="text-center bg-white p-5 text-capitalize">
-    <a href="/Calendar/index/@Model.TheDate.AddDays(-1).ToString("yyyy'/'M'/'dd")" id="yesterday">&lt;</a>
-        
-    <span class="mx-md-5 mx-3 d-sm-inline d-md-none " id="today">@Model.TheDate.ToString("dd-MM")</span>
-    <span class="mx-md-5 mx-3 d-none d-md-inline" id="today">@String.Format("{0:dddd, d. MMMM  yyyy}", @Model.TheDate)</span>
-        
-    <a href="/Calendar/index/@Model.TheDate.AddDays(1).ToString("yyyy'/'M'/'dd")" id="tomorrow">&gt;</a>
-</h1>
+    
+    <h1 class="text-center bg-white p-5 text-capitalize border border-primary-green">
+        <span class="d-inline movingarrow-parent">
+            <span class="pl-3">Goto day before</span>
+            <a class="text-primary" href="/Calendar/index/@Model.TheDate.AddDays(-1).ToString("yyyy'/'M'/'dd")" id="yesterday">
+                &lt;
+            </a>
+        </span>
 
-<div class="bg-secondary">
+        <span class="mx-md-5 mx-3 d-sm-inline d-md-none " id="today">@Model.TheDate.ToString("dd-MM")</span>
+        <span class="mx-md-5 mx-3 d-none d-md-inline" id="today">@String.Format("{0:dddd, d. MMMM  yyyy}", @Model.TheDate)</span>
 
-    @foreach (var foodItemGroup in Model.CalendarFoodItems)
+        <span class="d-inline movingarrow-parent">
+            <span class="">Goto next day</span>
+            <a class="text-primary" href="/Calendar/index/@Model.TheDate.AddDays(1).ToString("yyyy'/'M'/'dd")" id="tomorrow">&gt;</a>
+
+        </span>
+    </h1>
+    
+<div class="container bg-white mt-5">
+
+    @foreach (ClientMadbordet.ViewModels.MealWithFoodItemsViewModel<CalendarFoodItem, string> foodItemGroup in Model.CalendarFoodItems)
     {
-        <div class="row mt-5">
-            <div class="col-sm col-md-10 text-dark text-capitalize" id="MealHeader">
-                <h2 class="m-4 text-light d-lg-inline">
-                    @foodItemGroup.Key 
-                    <h5 class="text-black d-inline">
-                        <span class="fa-stack">
-                            <span class="fa fa-square fa-lg fa-stack-1x"></span>
-                            <strong class="fa-stack-1x text-light" style="font-size:80%;">
-                                C
-                            </strong>
-                        </span>
-                        120
-                        <span class="fa-stack">
-                            <span class="fa fa-square fa-lg fa-stack-1x"></span>
-                            <strong class="fa-stack-1x text-light" style="font-size:80%;">
-                                P
-                            </strong>
-                        </span>
-                        240
-                        <span class="fa-stack">
-                            <span class="fa fa-square fa-lg fa-stack-1x"></span>
-                            <strong class="fa-stack-1x text-light" style="font-size:80%;">
-                                F
-                            </strong>
-                        </span>
-                        123
-                        <span class="fa-stack">
-                            <span class="fa fa-square fa-lg fa-stack-1x"></span>
-                            <strong class="fa-stack-1x text-light" style="font-size:80%;">
-                                KCAL
-                            </strong>
-                        </span>
-                        700
-                        <span class="fa-stack">
-                            <span class="fa fa-square fa-lg fa-stack-1x fa-fw"></span>
-                            <strong class="fa-stack-1x text-light" style="font-size:80%;">
-                                W
-                            </strong>
-                        </span>
-                        954
-                    </h5>
-                    <a class="d-inline pl-2" href="/CalendarFood/Create/@Model.TheDateText/@foodItemGroup.Id">
-                        <i class="fa fa-plus"></i>
-                    </a>
-                </h2>
+    <div class="col-sm col-md bg-primary-green text-capitalize mt-4 border" id="MealHeader">
+        <h2 class="mx-4 text-uppercase text-dark d-lg-inline">
+            @foodItemGroup.Key
+        </h2>
+        @if (@foodItemGroup.Values.Sum(x => x.Weight) > 0)
+        {
+
+            <div class="totalsmenuitem border rounded-pill border-dark px-2">
+                info:
+                carbs: @foodItemGroup.TotalCarbs
+                proteins: @foodItemGroup.TotalProteins /
+                fats: @foodItemGroup.TotalFats /
+                kcal: @foodItemGroup.Values.Sum(x => x.Weight * (x.Food.Energy / 100)).ToString("G29") /
+                weight: @foodItemGroup.Values.Sum(x => x.Weight)
             </div>
-        </div>
+
+        }
+
+
+        <a class="d-inline pl-2 mt-2 text-dark float-right" href="/CalendarFood/Create/@Model.TheDateText/@foodItemGroup.Id">
+            <i class="fa fa-plus"></i>
+        </a>
+    </div>
+       
 
         @if (foodItemGroup.Values.Count() != 0)
         {
-            <div class="text-light container">
-                @foreach (var item in foodItemGroup.Values)
+            <div class="bg-light container pb-4">
+                @foreach (CalendarFoodItem item in foodItemGroup.Values)
                 {
                     <hr />
                     <div class="row tableline text-center">
 
                         <div class="col-1 d-none d-lg-inline text-left">
-                            <canvas class="myChart " width="90" height="40"
-                                    data-proteins="@item.Food.Protein"
-                                    data-carbs="@item.Food.Carb"
-                                    data-fats="@item.Food.Fat">
+                            <canvas class="myChart "
+                                    data-proteins="@item.Proteins"
+                                    data-carbs="@item.Carbs"
+                                    data-fats="@item.Fats">
                             </canvas>
                         </div>
                         <h5 class="col-3 ml-3 text-left my-auto text-capitalize">@Html.DisplayFor(modelItem => item.Food.Name)</h5>
-                        <div class="col-2 d-none d-md-inline my-auto"><h5>@Html.DisplayFor(modelItem => item.Food.Energy) kcal</h5></div>
+                        <div class="col-2 d-none d-md-inline my-auto"><h5>@Html.DisplayFor(modelItem => item.TotalEnergy) kcal</h5></div>
                         <div class="col-2 d-none d-md-inline my-auto"><h5>@Html.DisplayFor(modelItem => item.Weight) g</h5></div>
-
-                        <div class="col-1 my-auto">
-                            <form asp-action="Delete" asp-controller="CalendarFood" asp-route-id="@item.CalendarFoodItemID">
-                                @{
-                                var back = @Model.TheDateText + '/' + item.Meal.MealID;
-                                //if (@Model.queryString != null && Model.queryString != "")
-                                //{
-                                //    back += '/' + @Model.queryString;
-                                //}
-                                }
-                                <input id="back"
-                                       name="back"
-                                       type="hidden"
-                                       value="@back" />
-
-                                <button type="submit">
-                                    <i class="fas fa-trash "></i>
-                                </button>
-                            </form>
-                        </div>
                     </div>
                 }
-                <hr />
-            </div>
-        }
-        
+                </div>
+            }
     }
 </div>
-</div>
+
+
+@*<div class="col-1 my-auto">
+    <form asp-action="Delete" asp-controller="CalendarFood" asp-route-id="@item.CalendarFoodItemID">
+        @{
+            var back = @Model.TheDateText + '/' + item.Meal.MealID;
+            //if (@Model.queryString != null && Model.queryString != "")
+            //{
+            //    back += '/' + @Model.queryString;
+            //}
+        }
+        <input id="back"
+               name="back"
+               type="hidden"
+               value="@back" />
+
+        <button type="submit">
+            <i class="fas fa-trash "></i>
+        </button>
+    </form>
+</div>*@

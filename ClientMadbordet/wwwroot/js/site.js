@@ -23,51 +23,68 @@ $(document).ready(function () {
     canvasElements.each(function () {        
         var canvasElement = $(this);
         var ctx = canvasElement.get(0).getContext('2d');
-        ctx.fillStyle = "red";
+        ctx.fillStyle = "#FED";
         ctx.fillRect(0, 0, canvasElement.width, canvasElement.height);
 
         var proteinValue = parseFloat(canvasElement.data("proteins"));
         var carbValue = parseFloat(canvasElement.data("carbs"));
         var fatValue = parseFloat(canvasElement.data("fats"));
 
-        if (proteinValue != '0' && carbValue != '0' && fatValue != '0') {
-            var labels = ['protein', 'carbs', 'fat'];
-            var YValues = [proteinValue, carbValue, fatValue];
+        //if (proteinValue == '0' && carbValue == '0' && fatValue == '0') {
+        //    return
+        //}
 
-            var data = {
-                labels: labels,
-                datasets: [{
-                    label: "",
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 0, 255)'
-                    ],
-                    borderColor: [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 0, 255)'
-                    ],
-                    borderWidth: 1,
-                    data: YValues
-                }]
-            };
-
-            var options = {
-                maintainAspectRatio: true,
-                responsive: false,
-                legend: {
-                    display: false
-                }
-            };
-
-            var myChart = new Chart(ctx,
-                {
-                    options: options,
-                    data: data,
-                    type: 'pie'
-                });
+        if (carbValue == '0') {
+            carbValue = '0.001';
         }
+
+        if (proteinValue == '0' ) {
+            proteinValue = '0.0001';
+        }
+
+        if (fatValue == '0') {
+             fatValue = '0.0001';
+        }
+        
+        var labels = ['protein', 'carbs', 'fat'];
+        var YValues = [proteinValue, carbValue, fatValue];
+
+        var data = {
+            labels: labels,
+            datasets: [{
+                label: "",
+                backgroundColor: [
+                    'rgba(115, 115, 115, 1)',
+                    'rgba(153, 153, 255, 1)',
+                    'rgba(107, 0, 179,1)'
+                ],
+                borderColor: [
+                    'rgba(255,255,255,1)',
+                    'rgba(255,255,255, 1)',
+                    'rgba(255, 255, 255)'
+                ],
+                borderWidth: 1,
+                data: YValues
+            }]
+        };
+          
+
+        var options = {
+            maintainAspectRatio: true,
+            responsive: false,
+            legend: {
+                display: false
+            }
+        }
+
+        var myChart = new Chart(ctx,
+            {
+                options: options,
+                data: data,
+                type: 'pie'
+            }
+        )
+        
     });
 
 
