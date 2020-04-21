@@ -1,55 +1,97 @@
 ﻿@model ClientMadbordet.Models.Food
 
 @{
+
     ViewData["Title"] = "Create";
 }
 
-<h2>Create</h2>
+@section Scripts
+{
+    <script src="@Url.Content("~/js/FoodCreate.js")"></script>
+}
 
-<h4>Food</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Weight" class="control-label"></label>
-                <input asp-for="Weight" class="form-control" />
-                <span asp-validation-for="Weight" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Protein" class="control-label"></label>
-                <input asp-for="Protein" class="form-control" />
-                <span asp-validation-for="Protein" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Carb" class="control-label"></label>
-                <input asp-for="Carb" class="form-control" />
-                <span asp-validation-for="Carb" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Fat" class="control-label"></label>
-                <input asp-for="Fat" class="form-control" />
-                <span asp-validation-for="Fat" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Energy" class="control-label"></label>
-                <input asp-for="Energy" class="form-control" />
-                <span asp-validation-for="Energy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </form>
+<div class="container">
+    <h2>Create a new food item to be used by all users in the calendar.</h2>
+
+    <h4>Try carefully to add all informations, its very importent to the statistics.</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-8">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Protein" class="control-label"></label>
+                    <input asp-for="Protein" class="form-control" />
+                    <span asp-validation-for="Protein" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Carb" class="control-label"></label>
+                    <input asp-for="Carb" class="form-control" />
+                    <span asp-validation-for="Carb" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Fat" class="control-label"></label>
+                    <input asp-for="Fat" class="form-control" />
+                    <span asp-validation-for="Fat" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Energy" class="control-label"></label>
+                    <input asp-for="Energy" class="form-control" />
+                    <span asp-validation-for="Energy" class="text-danger"></span>
+                </div>
+
+                <label class="control-label">Weight Types</label>
+                <div class="p-4 bg-primary-green">
+                    <div class="form-group col-lg-8">
+                        <label asp-for="Weight" class="control-label">Default Weight in grams</label>
+                        <input asp-for="Weight" class="form-control" />
+                        <span asp-validation-for="Weight" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-lg-8">
+                        @if (Enumerable.Count(ViewBag.WeightTypes) > 0)
+                        {
+                            @foreach (WeightType weightType in ViewBag.WeightTypes)
+                            {
+                                @if (weightType.UnitName != "gram")
+                                {
+                                    <div class="form-check-inline">
+                                        <input id="@weightType.WTID" class="form-check-input weighttypescheck" type="checkbox" name="WeightTypes[]" value="@weightType.WTID" />
+                                        <label class="form-check-label" for="weighttypescheck">@weightType.UnitName</label>
+                                        <input class="@weightType.WTID-unitname" type="hidden" value="@weightType.UnitName" />
+                                    </div>
+                                }
+                            }
+                        }
+
+                    </div>
+
+                    <div id="weighttype-with-input" class="form-group col-lg-8 bg-secondary">
+                        <h1>Weight types selected</h1>
+                        <div class="selected-weighttypes col-6"></div>
+                    
+                    </div>
+
+                </div>
+
+
+
+
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-dark mt-5" />
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <hr />
 
+    <div>
+        <a class="btn btn-info" asp-action="Index">Back to List</a>
+    </div>
+
+</div>

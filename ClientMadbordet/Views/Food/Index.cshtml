@@ -4,53 +4,54 @@
     ViewData["Title"] = "Foods";
 }
 
-<h1>@ViewData["Title"]</h1>
+    <div class="container">
+        <h1>@ViewData["Title"]</h1>
 
-<p>
-    <a asp-action="Create">Add new food</a>
-</p>
+        <p>
+            <a asp-action="Create">Add new food</a>
+        </p>
 
-<div class="container">
-    <div class="row">
-        <table class="table">
-            <thead>
-                <tr class="bg-primary">
-                    <th>Food</th>
-                    <th>Fats</th>
-                    <th>Carbs</th>
-                    <th>Proteins</th>
-                    <th>Energy per 100gr</th>
-                    <th>Weight</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
 
-            @foreach (var food in Model)
-            {
-                <tbody>
-                    <tr>
-                        <td><h5>@Html.DisplayFor(modelItem => food.Name)</h5></td>
-                        <td><h5>@Html.DisplayFor(modelItem => food.Fat)</h5></td>
-                        <td><h5>@Html.DisplayFor(modelItem => food.Carb)</h5></td>
-                        <td><h5>@Html.DisplayFor(modelItem => food.Protein)</h5></td>
-                        <td><h5>@Html.DisplayFor(modelItem => food.Energy)</h5></td>
-                        <td><h5>@Html.DisplayFor(modelItem => food.Weight)</h5></td>
-
-                        <td>
-
-                            <a asp-controller="Food"
-                               asp-action="Edit"
-                               asp-route-id="@food.FoodID">
-                                Edit
-                            </a>
-
-                            <a asp-action="Delete" asp-route-id="@food.FoodID">Remove</a>
-                        </td>
+        <div class="row">
+            <table class="table">
+                <thead>
+                    <tr class="bg-primary">
+                        <th>Food</th>
+                        <th>Fats</th>
+                        <th>Carbs</th>
+                        <th>Proteins</th>
+                        <th>Energy per 100gr</th>
+                        <th>Weight</th>
+                        <th>Actions</th>
                     </tr>
-                </tbody>
-            }
-        </table>
+                </thead>
+
+                @foreach (var food in Model)
+                {
+                    <tbody>
+                        <tr>
+                            <td><h5>@Html.DisplayFor(modelItem => food.Name)</h5></td>
+                            <td><h5>@Html.DisplayFor(modelItem => food.Fat)</h5></td>
+                            <td><h5>@Html.DisplayFor(modelItem => food.Carb)</h5></td>
+                            <td><h5>@Html.DisplayFor(modelItem => food.Protein)</h5></td>
+                            <td><h5>@Html.DisplayFor(modelItem => food.Energy)</h5></td>
+                            <td><h5>@Html.DisplayFor(modelItem => food.Weight)</h5></td>
+
+                            <td>
+
+                                <a asp-controller="Food"
+                                   asp-action="Edit"
+                                   asp-route-id="@food.FoodID">
+                                    Edit
+                                </a>
+
+                                <a asp-action="Delete" asp-route-id="@food.FoodID">Remove</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                }
+            </table>
+        </div>
     </div>
-</div>
 
 

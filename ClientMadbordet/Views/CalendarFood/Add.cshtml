@@ -46,49 +46,57 @@
                 </thead>
                 <tbody>
 
-                    @foreach (CalendarFoodItem foodItem in Model.FoodItems)
-                    {
+                        <div class="form-group">
+                            @Html.LabelFor(x => Model.SelectedCountryIso3, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(x => Model.SelectedCountryIso3, new SelectList(Model.Countries, "Value", "Text"), htmlAttributes: new { @class = "form-control", id = "Country" })
+                                @Html.ValidationMessageFor(x => x.SelectedCountryIso3, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
 
-                        <tr id="tableline">
-                            <td><h5>@Html.DisplayFor(modelItem => foodItem.Food.Name)</h5></td>
-                            @{ var correctEnergy = ((decimal)foodItem.Weight / 100) * foodItem.Food.Energy; }
-                            <td><h5>@Html.DisplayFor(modelItem => foodItem.Food.Energy) / @String.Format("{0:0.00}", correctEnergy)</h5></td>
-                            <td>
-                                <h5>
+                        @foreach (CalendarFoodItem foodItem in Model.FoodItems)
+                        {
 
-                                    <input class="calendarFoodWeight" id="calendarFoodWeight-@foodItem.CalendarFoodItemID"
-                                           type="text"
-                                           data-calendarfooditemid="@foodItem.CalendarFoodItemID"
-                                           value="@Html.DisplayFor(modelItem => foodItem.Weight)" />
-                                </h5>
-                            <td>
-                                <form asp-action="Delete" asp-route-id="@foodItem.CalendarFoodItemID">
-                                    @{
-                                        var back = @Model.DateFormatted + '/' + @Model.Meal.MealID;
-                                        if (@Model.queryString != null && Model.queryString != "")
-                                        {
-                                            back += '/' + @Model.queryString;
+                            <tr id="tableline">
+                                <td><h5>@Html.DisplayFor(modelItem => foodItem.Food.Name)</h5></td>
+                                @{ var correctEnergy = ((decimal)foodItem.Weight / 100) * foodItem.Food.Energy; }
+                                <td><h5>@Html.DisplayFor(modelItem => foodItem.Food.Energy) / @String.Format("{0:0.00}", correctEnergy)</h5></td>
+                                <td>
+                                    <h5>
+
+                                        <input class="calendarFoodWeight" id="calendarFoodWeight-@foodItem.CalendarFoodItemID"
+                                               type="text"
+                                               data-calendarfooditemid="@foodItem.CalendarFoodItemID"
+                                               value="@Html.DisplayFor(modelItem => foodItem.Weight)" />
+                                    </h5>
+                                <td>
+                                    <form asp-action="Delete" asp-route-id="@foodItem.CalendarFoodItemID">
+                                        @{
+                                            var back = @Model.DateFormatted + '/' + @Model.Meal.MealID;
+                                            if (@Model.queryString != null && Model.queryString != "")
+                                            {
+                                                back += '/' + @Model.queryString;
+                                            }
                                         }
-                                    }
-                                    <input id="back"
-                                           name="back"
-                                           type="hidden"
-                                           value="@back" />
+                                        <input id="back"
+                                               name="back"
+                                               type="hidden"
+                                               value="@back" />
 
-                                    <button type="submit">
-                                        <span class="fa-stack">
-                                            <i class="fa fa-minus"></i>
-                                        </span>
-                                    </button>
-                                </form>
-                            </td>
+                                        <button type="submit">
+                                            <span class="fa-stack">
+                                                <i class="fa fa-minus"></i>
+                                            </span>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td><strong>Totals</strong></td>
+                            <td><strong>@String.Format("{0:0.00}", Model.TotalEnergy)</strong></td>
+                            <td><strong>@String.Format("{0:0.00}", Model.TotalWeight)</strong></td>
                         </tr>
-                    }
-                    <tr>
-                        <td><strong>Totals</strong></td>
-                        <td><strong>@String.Format("{0:0.00}", Model.TotalEnergy)</strong></td>
-                        <td><strong>@String.Format("{0:0.00}", Model.TotalWeight)</strong></td>
-                    </tr>
                 </tbody>
 
             </table>

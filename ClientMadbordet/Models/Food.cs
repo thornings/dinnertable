@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClientMadbordet.Models
@@ -17,6 +18,8 @@ namespace ClientMadbordet.Models
 
         [Required]
         public string Name { get; set; }
+
+        //public FoodWeightType FoodWeightType { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]
@@ -57,6 +60,8 @@ namespace ClientMadbordet.Models
         {
             return (Carb * 4) + (Fat * 9) + (Protein * 4);
         }
+
+        public IList<FoodWeightType> FoodWeightTypes { get; set; }
 
     }
 

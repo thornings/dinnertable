@@ -1,7 +1,8 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ClientMadbordet.Models;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using System.Linq;
 
 namespace ClientMadbordet.Controllers
 {
@@ -23,19 +24,44 @@ namespace ClientMadbordet.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            ViewBag.WeightTypes = this.CalendarDb.WeightTypes;
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind] Food newFood)
+        public IActionResult Create([Bind] Food newFood, [FromForm] string[] FoodWeightIds, string[] FoodWeightValues)
         {
+ 
             if(ModelState.IsValid)
             {
                 CalendarDb.Foods.Add(newFood);
                 CalendarDb.SaveChanges();
+
+                // add foodweighttypes
+                for (int i = 0; i < FoodWeightIds.Length; i++)
+                {
+                    var weight = FoodWeightValues[i];
+                    var id = FoodWeightIds[i];
+                    if (! string.IsNullOrEmpty(weight))
+                    {
+                        var weighttype = this.CalendarDb.WeightTypes.Where(wt => wt.WTID == int.Parse(id)).First();
+                        var fwt = new FoodWeightType()
+                        {
+                            Food = newFood,
+                            FoodId = newFood.FoodID,
+                            WeightType = weighttype,
+                            WeightTypeId = weighttype.WTID,
+                            Weight = int.Parse(weight)
+                        };
+                        CalendarDb.FoodWeightTypes.Add(fwt);
+                    }
+                }
+
+                CalendarDb.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.WeightTypes = this.CalendarDb.WeightTypes;
             return View(newFood);
         }
 
