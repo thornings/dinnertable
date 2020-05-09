@@ -1,12 +1,13 @@
 ﻿@model ClientMadbordet.ViewModels.CalendarFoodsViewModel
 
+
 @foreach (Food foodItem in Model.Foods)
 {
     <a href="/CalendarFood/Create/@Model.DateFormatted/@foodItem.FoodID/@Model.MealId">
-        <div class="Card" style="margin: 10px; border: solid 1px black;">
-            <div class="card-body" style="margin: 4px">
+        <div class="Card bg-dark mt-1 mr-1">
+            <div class="card-body ">
                 <h5 class="card-title">@foodItem.Name</h5>
-                <p class="card-subtitle mb-2 text-muted">@foodItem.Weight</p>
+                <p class="card-subtitle mb-2 text-white">@foodItem.Weight</p>
             </div>
         </div>
     </a>

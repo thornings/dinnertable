@@ -1,8 +1,36 @@
-﻿$primary: #97b48f; 
+﻿
+$primary: #97b48f; 
 $secondary: #fffff1; 
 $light: #e9eeea; 
 $dark: #3d4445; 
 $white: #FFF;
+
+@import "../lib/bootstrap/scss/_functions.scss";
+@import "../lib/bootstrap/scss/_variables.scss";
+
+$spacer: 1rem !default;
+$spacers: () !default;
+$spacers: map-merge( ( 0: 0, 1: ($spacer * .25), 2: ($spacer * .5), 3: $spacer, 4: ($spacer * 1.5), 5: ($spacer * 3), 6: ($spacer * 4), 7: ($spacer * 5), 8: ($spacer * 6) ), $spacers );
+
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+#calendarMenuButton {
+    position: fixed;
+    right: 0;
+}
+
+.myChart {
+    width: 100px;
+    height: 50px;
+}
+
+body {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight:400;
+}
 
 nav.navbar {
     background: linear-gradient($secondary, $primary)
@@ -15,48 +43,103 @@ $theme-colors: (
     "dark": $dark
     );
 
-.movingarrow-parent > span {
-    position: absolute;
-    left: 0px;
-    font-weight: 300;
-    font-size: 0.5em;
-    line-height: 1em;
-    display: none;
-    z-index: 10;
-
-}
-
 .movingarrow-parent {
     position: relative;
-    z-index: 1;
     left: 0;
     top: 0;
     font-weight: 100;
-}
+    opacity: 1;
 
-.movingarrow-parent:hover {
-    & > span {
-        margin-left: -150px;
-        display: inline;
-        animation: movearrow 3s;
-        animation-iteration-count: 1;
+    & .movingarrow-text {
+        position: absolute;
+        top: -20px;
+        left: -50px;
+        opacity: 0;
+        padding-left: 0px;
+        transition: all ease-in 1s;
+        font-size: 0.4em;
+    }
+
+    & .info-left {
+        left: -85px;
+    }
+
+    & .info-right {
+        left: 10px;
+        width: 100px;
+    }
+
+    & a {
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 1;
+        text-decoration: none !important
+    }
+
+    & .movingarrow-hover:hover ~ .movingarrow-text {
+        opacity: 1;
+        top: 11px;
     }
 }
 
-.totalsmenuitem {
-    width: 2.9em;
+.plussign-parent {
+    font-size: 1em;
+    opacity: 1;
+    position: relative;
+    left: 0px;
+    height: 30px;
+
+    & .plussign-text {
+        position: absolute;
+        font-size: .8em;
+        right:20px;
+        top: -30px;
+        opacity: 0;
+        transition: all 0.5s ease-in;
+    }
+
+    & .plussign-hover {
+        position: absolute;
+        right: 0px;
+    }
+
+    & .plussign-hover:hover ~ .plussign-text {
+        opacity: 1;
+        top: 10px;
+        right: 30px;
+    }
+}
+
+.infoAnimationGroup {
+    padding-top: 7px;
+    overflow-y: hidden;
+    max-height: 40px;
+}
+
+.mealtitle {
+    font-family: 'Nunito Sans', sans-serif;
+}
+
+.row [class*='col-'] {
+ 
+    transition: all 0.5s ease-in-out;
+}
+
+.totals-title {
+    margin-top: 3px;
+    font-family: lobster;
+}
+
+.totals-specials {
+    display: none;
+    /*width: 2.5em;
     display: inline-block;
     white-space: nowrap;
+    transition: all 0.3s ease-in;*/
     overflow: hidden;
     text-overflow: clip;
-    background-color: white;
-    transition: all 0.3s ease-in;
 }
-
-.totalsmenuitem:hover {
-    width: 30em;
-}
-
 
 @keyframes movearrow {
     0% {
@@ -75,7 +158,19 @@ $theme-colors: (
     }
 }
 
+#bgimage {
+    background-image: url("/images/foods01.jpg");
+    background-position-y:center;
+    background-repeat: no-repeat;
+    background-size:cover;
+    width: 100%;
+    height: 150px;
+    border: 1px solid;
+}
 
+.border-3 {
+    border-width: 3px !important;
+}
 
 @import "../lib/bootstrap/scss/bootstrap.scss";
 

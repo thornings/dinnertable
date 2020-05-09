@@ -4,18 +4,7 @@
 // Write your JavaScript code.
 $(document).ready(function () {
     $("[data-toggle=popover]").popover({ html: true });
-
-    //$('#calendarMenuButton').on("click", function () {
-    //    var faElement = $(this).find('i');
-    //    var isOpen = faElement.hasClass("fa-rotate-45");
-    //    if (isOpen)
-    //    {
-    //        faElement.removeClass('fa-rotate-45');
-    //    } else {
-    //        faElement.addClass('fa-rotate-45').addClass("fullSizeCalendar");
-    //    }
-    //});
-
+    var totalsmenuitemdiv = $(this).find(".totalsmenuitem");
 
     /* CHART */
     var canvasElements = $('.myChart');
@@ -29,10 +18,9 @@ $(document).ready(function () {
         var proteinValue = parseFloat(canvasElement.data("proteins"));
         var carbValue = parseFloat(canvasElement.data("carbs"));
         var fatValue = parseFloat(canvasElement.data("fats"));
-
-        //if (proteinValue == '0' && carbValue == '0' && fatValue == '0') {
-        //    return
-        //}
+        var carbsText = canvasElement.data("titlecarbs");
+        var proteinText = canvasElement.data("titleproteins");
+        var fatText = canvasElement.data("titlefats");
 
         if (carbValue == '0') {
             carbValue = '0.001';
@@ -46,7 +34,7 @@ $(document).ready(function () {
              fatValue = '0.0001';
         }
         
-        var labels = ['protein', 'carbs', 'fat'];
+        var labels = [proteinText, carbsText, fatText];
         var YValues = [proteinValue, carbValue, fatValue];
 
         var data = {
@@ -86,14 +74,5 @@ $(document).ready(function () {
         )
         
     });
-
-
-    //var yesterday = $('#yesterday');
-    //var tomorrow = $('#tomorrow');
-    //var today = $('#today');
-
-    //tomorrow.on("click", function () {
-    //    yesterday
-    //});
 
 });  

@@ -1,0 +1,17 @@
+﻿@model ClientMadbordet.ViewModels.MealWithFoodItemsViewModel<CalendarFoodItem, string>
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<ClientMadbordet.Controllers.CalendarController> Localizer
+
+<span class="totals-title px-1 text-light">
+    @Localizer["Info"]
+</span>
+
+<span class="totals-specials">
+    <p class="d-inline">@Localizer["Carbs"]: </p>@Model.TotalCarbs
+    <p class="d-inline">/ @Localizer["Proteins"]: </p>@Model.TotalProteins
+    <p class="d-inline">/ @Localizer["Fats"]: </p>@Model.TotalFats
+    <p class="d-inline">/ @Localizer["Kcal"]:</p> @Model.Values.Sum(x => x.Weight * (x.Food.Energy / 100)).ToString("G29")
+    <p class="d-inline">/ @Localizer["Weight"]: </p>@Model.Values.Sum(x => x.Weight)
+</span>
+

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -21,6 +22,8 @@ namespace ClientMadbordet.Models
 
         public virtual Food Food { get; set; }
         public virtual Meal Meal { get; set; }
+
+        public FoodWeightType SelectedFoodWeightType { get; set; }
 
         [NotMapped]
         public decimal TotalEnergy

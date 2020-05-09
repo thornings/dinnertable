@@ -3,12 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using ClientMadbordet.Models;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
+using System;
 
 namespace ClientMadbordet.Controllers
 {
     public class FoodController : Controller
     {
-        CalendarContext CalendarDb;
+        private readonly CalendarContext CalendarDb;
 
         public FoodController(CalendarContext db)
         {
@@ -39,6 +40,17 @@ namespace ClientMadbordet.Controllers
                 CalendarDb.SaveChanges();
 
                 // add foodweighttypes
+                // always gram
+                var gramWeighttype = this.CalendarDb.WeightTypes.Where(wt => wt.UnitName == "gram").First();
+                var fwt = new FoodWeightType()
+                {
+                    Food = newFood,
+                    FoodId = newFood.FoodID,
+                    WeightType = gramWeighttype,
+                    WeightTypeId = gramWeighttype.WTID,
+                    Weight = Decimal.ToInt32(newFood.Weight)
+                };
+
                 for (int i = 0; i < FoodWeightIds.Length; i++)
                 {
                     var weight = FoodWeightValues[i];
@@ -46,7 +58,7 @@ namespace ClientMadbordet.Controllers
                     if (! string.IsNullOrEmpty(weight))
                     {
                         var weighttype = this.CalendarDb.WeightTypes.Where(wt => wt.WTID == int.Parse(id)).First();
-                        var fwt = new FoodWeightType()
+                        fwt = new FoodWeightType()
                         {
                             Food = newFood,
                             FoodId = newFood.FoodID,

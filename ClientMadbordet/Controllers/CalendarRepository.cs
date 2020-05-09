@@ -1,22 +1,47 @@
 ﻿using ClientMadbordet.Models;
-using ClientMadbordet.Repositories;
+using ClientMadbordet.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ClientMadbordet.Controllers
 {
     public class CalendarRepository : ICalendarRepository
     {
-        public IEnumerable<Meal> GetAllDaysMeals()
+        private CalendarContext _calendarDatabase;
+
+
+        public CalendarRepository(CalendarContext calendarContext)
         {
-            throw new NotImplementedException();
+            _calendarDatabase = calendarContext;
         }
 
-        public IEnumerable<Food> GetAllFood()
+        public IQueryable<CalendarFoodItem> GetCalendarFoodItemsByDate(DateTime date)
         {
-            throw new NotImplementedException();
+            return _calendarDatabase.FoodItems.Where(c => c.CalendarDate.Date == date.Date).Include(f => f.Food).Include(m => m.Meal);
+        }
+
+        public IQueryable<MealWithFoodItemsViewModel<CalendarFoodItem, string>> GetFoodItemInMeal(IQueryable<CalendarFoodItem> foodItems)
+        {
+            var calendarFoodItems =
+                from meal in _calendarDatabase.Meals
+                join calendarItem in foodItems on meal.MealID equals calendarItem.Meal.MealID
+                into ci
+                select new MealWithFoodItemsViewModel<CalendarFoodItem, string>
+                {
+                    Key = meal.Name,
+                    Values = ci,
+                    Id = meal.MealID,
+                    TotalCarbs = (int)ci.Sum(x => x.Food.Carb * (((decimal)x.Weight) / 100)),
+                    TotalProteins = (int)ci.Sum(x => x.Food.Protein * ((decimal)x.Weight / 100)),
+                    TotalFats = (int)ci.Sum(x => x.Food.Fat * ((decimal)x.Weight / 100))
+                };
+            return calendarFoodItems;
+        }
+
+        public void Save()
+        {
+            _calendarDatabase.SaveChanges();
         }
     }
 }

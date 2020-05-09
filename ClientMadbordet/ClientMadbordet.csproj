@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200421094237_AddFoodWeightTypeToCalendarFoodItem.cs" />
+    <Compile Remove="Migrations\20200421094237_AddFoodWeightTypeToCalendarFoodItem.Designer.cs" />
     <Compile Remove="Repositories\Repository.cs" />
   </ItemGroup>
 
@@ -58,10 +60,25 @@
     <Content Update="Views\Food\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="wwwroot\images\foods01.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Areas\Identity\Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Controllers\CalendarController.da.resx">
+      <CustomToolNamespace>Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Controllers\CalendarController.en.resx">
+      <CustomToolNamespace>Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Calendar\IndexPartials\CalendarController.da.resx">
+      <CustomToolNamespace>Resources</CustomToolNamespace>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

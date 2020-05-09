@@ -12,65 +12,76 @@
     ViewData["Title"] = "add some food";
 }
 
-<div class="container">
-
-    @if (ViewData["Error"] != null)
-    {
-        <div class="alert-danger">
-            <p><strong>Error:</strong> @ViewData["Error"].ToString()</p>
-        </div>
-    }
-
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert-success">
-            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
-        </div>
-    }
-
-    <div class="row">
-        <h2 style="padding:0">Add to @Model.DateFormatted - @Model.Meal.Name</h2>
+@if (ViewData["Error"] != null)
+{
+    <div class="viewErrors alert-danger">
+        <p><strong>Error:</strong> @ViewData["Error"].ToString()</p>
     </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="viewSucces alert-success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+
+<section id="selectedFoods" class="container pt-5 ">
+
+    <div class="row mb-5 px-3 pt-1 border border-3 bg-dark text-white text-uppercase rounded-pill">
+        <h2 class="col-7 pl-0 ">@Model.Meal.Name </h2>
+        <h2 class="col-5 text-right pr-0">@string.Format("{0:D}", @Model.Date)</h2>
+    </div>
+
+    <h2 class="row p-0 text-left">Food</h2>
 
     <div class="row">
         <div class="table-responsive">
-            <table class="table">
+            <table class="table table-striped">
                 <thead>
                     <tr class="bg-primary">
-
                         <th>Food</th>
                         <th>Energy</th>
-                        <th>Weight</th>
+                        <th>Pieces</th>
+                        <th>Food Weight Unit</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-
-                        <div class="form-group">
-                            @Html.LabelFor(x => Model.SelectedCountryIso3, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
-                                @Html.DropDownListFor(x => Model.SelectedCountryIso3, new SelectList(Model.Countries, "Value", "Text"), htmlAttributes: new { @class = "form-control", id = "Country" })
-                                @Html.ValidationMessageFor(x => x.SelectedCountryIso3, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        @foreach (CalendarFoodItem foodItem in Model.FoodItems)
-                        {
-
-                            <tr id="tableline">
-                                <td><h5>@Html.DisplayFor(modelItem => foodItem.Food.Name)</h5></td>
-                                @{ var correctEnergy = ((decimal)foodItem.Weight / 100) * foodItem.Food.Energy; }
-                                <td><h5>@Html.DisplayFor(modelItem => foodItem.Food.Energy) / @String.Format("{0:0.00}", correctEnergy)</h5></td>
+                    @foreach (ClientMadbordet.ViewModels.CalendarFoodItemViewModel vm in Model.FoodItemViewModels)
+                    {
+                            <tr id="@vm.FoodItem.CalendarFoodItemID" class="foodItemId">
                                 <td>
-                                    <h5>
+                                    <h5 class="p-1 text-capitalize">@Html.DisplayFor(modelItem => vm.FoodItem.Food.Name)</h5>
+                                </td>
 
-                                        <input class="calendarFoodWeight" id="calendarFoodWeight-@foodItem.CalendarFoodItemID"
+                                @{ var correctEnergy = (@vm.FoodItem.SelectedFoodWeightType!=null)?((decimal)vm.FoodItem.Weight) * vm.FoodItem.SelectedFoodWeightType.Weight: vm.FoodItem.Weight; }
+                                <td>
+                                    <h5 class="p-1">@String.Format("{0:0}", (vm.FoodItem.SelectedFoodWeightType!=null)?vm.FoodItem.SelectedFoodWeightType.Weight:vm.FoodItem.Weight) / @String.Format("{0:0}", correctEnergy)</h5>
+                                </td>
+
+                                <td>
+                                    <h5 class="foodItemPieces">
+                                        <input class="calendarFoodWeight form-control-sm" id="calendarFoodWeight-@vm.FoodItem.CalendarFoodItemID"
                                                type="text"
-                                               data-calendarfooditemid="@foodItem.CalendarFoodItemID"
-                                               value="@Html.DisplayFor(modelItem => foodItem.Weight)" />
+                                               data-calendarfooditemid="@vm.FoodItem.CalendarFoodItemID"
+                                               value="@vm.FoodItem.Weight" />
+                                        @* value="@Html.DisplayFor(modelItem => foodItem.SelectedFoodWeightType.WeightTypeId)" />*@
                                     </h5>
+                                    @*<span asp-validation-for="Course.DepartmentID" class="text-danger"></span>*@
+                                </td>
                                 <td>
-                                    <form asp-action="Delete" asp-route-id="@foodItem.CalendarFoodItemID">
+                                    @if (@vm.FoodItem.Food.FoodWeightTypes != null)
+                                    {
+                                        //new SelectList(vm.FoodWeightTypes, "id", "countryName", "82");
+                                        <select class="form-control-sm"
+                                            asp-for="@vm.SelectedWeightType"
+                                            asp-items="@vm.FoodWeightTypes">                                                                                          
+                                        </select>
+                                    }
+                                </td>
+                                <td>
+                                    <form asp-action="Delete" asp-route-id="@vm.FoodItem.CalendarFoodItemID">
                                         @{
                                             var back = @Model.DateFormatted + '/' + @Model.Meal.MealID;
                                             if (@Model.queryString != null && Model.queryString != "")
@@ -83,51 +94,49 @@
                                                type="hidden"
                                                value="@back" />
 
-                                        <button type="submit">
-                                            <span class="fa-stack">
-                                                <i class="fa fa-minus"></i>
-                                            </span>
+                                        <button type="submit" class="btn border-danger border-3 form-control-sm">
+                                            <i class="fa fa-eraser"></i>
                                         </button>
                                     </form>
                                 </td>
                             </tr>
-                        }
-                        <tr>
-                            <td><strong>Totals</strong></td>
-                            <td><strong>@String.Format("{0:0.00}", Model.TotalEnergy)</strong></td>
-                            <td><strong>@String.Format("{0:0.00}", Model.TotalWeight)</strong></td>
-                        </tr>
+                    }
+                    <tr>
+                        <td><strong>Totals</strong></td>
+                        <td><strong id="addedTotalKcal">@String.Format("{0:0}", Model.TotalEnergy)</strong></td>
+                        <td><strong id="addedTotalPieces">@String.Format("{0:0}", Model.TotalWeight)</strong></td>
+                    </tr>
                 </tbody>
-
             </table>
         </div>
+    </div>
+</section>
 
-        <hr />
-
-        <h4>Foods</h4>
+<section id="chooseFoodSection" class="bg-primary-green px-4">
+    <div class="container">
+        <h4 class="pt-6">Add new Food</h4>
         <section id="searchSection">
-            <input id="calendarFoodSearchBox" data-mealid="@Model.Meal.MealID" data-dateformatted="@Model.DateFormatted" type="text" placeholder="search" style="width: 1200px" />
+            <input id="calendarFoodSearchBox" class="form-control" data-mealid="@Model.Meal.MealID" data-dateformatted="@Model.DateFormatted" type="text" placeholder="search" />
         </section>
 
-        <section id="foodsSection">
+        <section id="foodsSection" class="pb-6">
             <label id="foodsError"></label>
-            <div id="foods" class="row">
+            <div id="foods" class="row text-center d-inline-flex justify-content-between ">
                 @{
-
                     var calendarFoods = new ClientMadbordet.ViewModels.CalendarFoodsViewModel();
                     calendarFoods.MealId = Model.Meal.MealID;
                     calendarFoods.Foods = Model.Foods.ToList();
                     calendarFoods.DateFormatted = @Model.DateFormatted;
-
                     <partial name="_FoodsResults" model="calendarFoods" />
                 }
             </div>
         </section>
-
-
     </div>
+</section>
+
+<div class="container">
     <div class="row mt-5">
-        <a class="btn btn-info" href="/Calendar">Back to List</a>
+        <a class="btn btn-info" href="/Calendar/index/@Model.Date.ToString("yyyy'/'M'/'dd")">Back to Calendar</a>
     </div>
-
 </div>
+

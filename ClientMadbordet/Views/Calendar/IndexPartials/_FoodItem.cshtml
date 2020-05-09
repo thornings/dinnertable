@@ -1,0 +1,20 @@
+﻿@model CalendarFoodItem
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<ClientMadbordet.Controllers.CalendarController> Localizer
+
+
+<div class="col-1 d-none d-lg-inline text-left">
+    <canvas class="myChart"
+            data-proteins="@Model.Proteins"
+            data-carbs="@Model.Carbs"
+            data-fats="@Model.Fats"
+            data-titlecarbs = @Localizer["Carbs"] 
+            data-titleproteins = @Localizer["Proteins"] 
+            data-titlefats = @Localizer["Fats"] 
+    >
+    </canvas>
+</div>
+
+<h5 class="col-3 ml-3 text-left my-auto text-capitalize">@Html.DisplayFor(modelItem => Model.Food.Name)</h5>
+<div class="col-2 d-none d-md-inline my-auto"><h5>@Html.DisplayFor(modelItem => Model.TotalEnergy) kcal</h5></div>
+<div class="col-2 d-none d-md-inline my-auto"><h5>@Html.DisplayFor(modelItem => Model.Weight)</h5></div>

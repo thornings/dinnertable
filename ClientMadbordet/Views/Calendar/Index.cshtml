@@ -1,99 +1,58 @@
 ﻿@model ClientMadbordet.ViewModels.CalendarViewModel;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<ClientMadbordet.Controllers.CalendarController> Localizer
 
 @{
-    ViewData["Title"] = "Today";
+    ViewData["Title"] = Localizer["Today"];
 }
 
-    
-    <h1 class="text-center bg-white p-5 text-capitalize border border-primary-green">
-        <span class="d-inline movingarrow-parent">
-            <span class="pl-3">Goto day before</span>
-            <a class="text-primary" href="/Calendar/index/@Model.TheDate.AddDays(-1).ToString("yyyy'/'M'/'dd")" id="yesterday">
-                &lt;
-            </a>
-        </span>
+@section Scripts
+{
+    <script src="@Url.Content("~/js/CalendarIndex.js")"></script>
+}
 
-        <span class="mx-md-5 mx-3 d-sm-inline d-md-none " id="today">@Model.TheDate.ToString("dd-MM")</span>
-        <span class="mx-md-5 mx-3 d-none d-md-inline" id="today">@String.Format("{0:dddd, d. MMMM  yyyy}", @Model.TheDate)</span>
+<h4 class="text-center bg-white p-2 text-capitalize border border-primary-green">
+    <partial name="IndexPartials/_DateNavigation" model="Model" />
+</h4>
 
-        <span class="d-inline movingarrow-parent">
-            <span class="">Goto next day</span>
-            <a class="text-primary" href="/Calendar/index/@Model.TheDate.AddDays(1).ToString("yyyy'/'M'/'dd")" id="tomorrow">&gt;</a>
-
-        </span>
-    </h1>
-    
-<div class="container bg-white mt-5">
-
+@* meals container *@
+<div class="container mt-5">
     @foreach (ClientMadbordet.ViewModels.MealWithFoodItemsViewModel<CalendarFoodItem, string> foodItemGroup in Model.CalendarFoodItems)
     {
-    <div class="col-sm col-md bg-primary-green text-capitalize mt-4 border" id="MealHeader">
-        <h2 class="mx-4 text-uppercase text-dark d-lg-inline">
-            @foodItemGroup.Key
-        </h2>
-        @if (@foodItemGroup.Values.Sum(x => x.Weight) > 0)
-        {
+        <div class="row bg-primary-green text-capitalize border rouded-pill rounded-top" id="MealHeader">
 
-            <div class="totalsmenuitem border rounded-pill border-dark px-2">
-                info:
-                carbs: @foodItemGroup.TotalCarbs
-                proteins: @foodItemGroup.TotalProteins /
-                fats: @foodItemGroup.TotalFats /
-                kcal: @foodItemGroup.Values.Sum(x => x.Weight * (x.Food.Energy / 100)).ToString("G29") /
-                weight: @foodItemGroup.Values.Sum(x => x.Weight)
+            <div class="infoAnimationGroup col-1 bg-dark text-light">
+                <div class="totalsmenuitemdiv">
+                    @if (@foodItemGroup.Values.Sum(x => x.Weight) > 0)
+                    {
+                        <partial name="IndexPartials\_IngredientTotalsLine" model="foodItemGroup"  />
+                    }
+                 </div>
             </div>
 
-        }
+            <h4 class="col-8 mx-4 mt-1 text-uppercase text-dark mealtitle">
+                @Localizer[foodItemGroup.Key]
+            </h4>
 
+            <div class="plussign-parent d-inline col-2 text-right">
+                <a class="plussign-hover text-dark pt-2 text-right" href="/CalendarFood/Create/@Model.TheDateText/@foodItemGroup.Id">
+                    <i class="fa fa-plus"></i>
+                </a>
+                <p class="plussign-text">@Localizer["Change foods in"] @Localizer[@foodItemGroup.Key] </p>
+            </div>
 
-        <a class="d-inline pl-2 mt-2 text-dark float-right" href="/CalendarFood/Create/@Model.TheDateText/@foodItemGroup.Id">
-            <i class="fa fa-plus"></i>
-        </a>
-    </div>
-       
+        </div>
 
         @if (foodItemGroup.Values.Count() != 0)
         {
-            <div class="bg-light container pb-4">
-                @foreach (CalendarFoodItem item in foodItemGroup.Values)
-                {
-                    <hr />
-                    <div class="row tableline text-center">
-
-                        <div class="col-1 d-none d-lg-inline text-left">
-                            <canvas class="myChart "
-                                    data-proteins="@item.Proteins"
-                                    data-carbs="@item.Carbs"
-                                    data-fats="@item.Fats">
-                            </canvas>
-                        </div>
-                        <h5 class="col-3 ml-3 text-left my-auto text-capitalize">@Html.DisplayFor(modelItem => item.Food.Name)</h5>
-                        <div class="col-2 d-none d-md-inline my-auto"><h5>@Html.DisplayFor(modelItem => item.TotalEnergy) kcal</h5></div>
-                        <div class="col-2 d-none d-md-inline my-auto"><h5>@Html.DisplayFor(modelItem => item.Weight) g</h5></div>
-                    </div>
-                }
+            @foreach (CalendarFoodItem item in foodItemGroup.Values)
+            {
+                <div class="row text-center bg-light border border-bottom">
+                    <partial name="IndexPartials/_FoodItem" model="item" />
                 </div>
             }
+        }
     }
 </div>
 
 
-@*<div class="col-1 my-auto">
-    <form asp-action="Delete" asp-controller="CalendarFood" asp-route-id="@item.CalendarFoodItemID">
-        @{
-            var back = @Model.TheDateText + '/' + item.Meal.MealID;
-            //if (@Model.queryString != null && Model.queryString != "")
-            //{
-            //    back += '/' + @Model.queryString;
-            //}
-        }
-        <input id="back"
-               name="back"
-               type="hidden"
-               value="@back" />
-
-        <button type="submit">
-            <i class="fas fa-trash "></i>
-        </button>
-    </form>
-</div>*@

@@ -10,6 +10,7 @@ namespace ClientMadbordet.Models
         {
             //Ingredient = new HashSet<Ingredient>();
             //CalendarItems = new HashSet<CalendarItem>();
+            FoodWeightTypes = new List<FoodWeightType>();
         }
 
         [Required]

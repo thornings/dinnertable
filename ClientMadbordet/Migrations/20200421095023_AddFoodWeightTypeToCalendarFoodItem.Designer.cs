@@ -4,14 +4,16 @@ using ClientMadbordet.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ClientMadbordet.Migrations
 {
     [DbContext(typeof(CalendarContext))]
-    partial class CalendarContextModelSnapshot : ModelSnapshot
+    [Migration("20200421095023_AddFoodWeightTypeToCalendarFoodItem")]
+    partial class AddFoodWeightTypeToCalendarFoodItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,13 +85,9 @@ namespace ClientMadbordet.Migrations
 
                     b.Property<int>("WeightTypeId");
 
-                    b.Property<int>("FoodWeightTypeID");
-
                     b.Property<int>("Weight");
 
                     b.HasKey("FoodId", "WeightTypeId");
-
-                    b.HasAlternateKey("FoodWeightTypeID");
 
                     b.HasIndex("WeightTypeId");
 
