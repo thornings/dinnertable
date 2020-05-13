@@ -13,14 +13,12 @@ namespace ClientMadbordet.Controllers
     [Authorize]
     public class CalendarController : Controller
     {
-        private CalendarContext _calendarDatabase;
-       // private readonly IStringLocalizer<CalendarController> _localizer;
-        private CalendarRepository _calendarRepository;
+        private readonly CalendarContext _calendarDatabase;
+        private readonly CalendarRepository _calendarRepository;
 
-        public CalendarController(CalendarContext dbc, IStringLocalizer<CalendarController> localizer)
+        public CalendarController(CalendarContext dbc)
         {
             this._calendarDatabase = dbc;
-        //    _localizer = localizer;
             _calendarRepository = new CalendarRepository(this._calendarDatabase);
         }
 
@@ -36,7 +34,7 @@ namespace ClientMadbordet.Controllers
                 CalendarFoodItems = calendarFoodItemViewModels,
 
                 TheDate = calendarDate,
-                TheDateText = calendarDate.Year + "/" + calendarDate.Month + "/" + calendarDate.Day,
+                TheDateText = calendarDate.Year + "/" + calendarDate.Month.ToString("d2") + "/" + calendarDate.Day,
             };
 
             return View(cvm);

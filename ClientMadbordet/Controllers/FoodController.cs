@@ -10,6 +10,7 @@ namespace ClientMadbordet.Controllers
     public class FoodController : Controller
     {
         private readonly CalendarContext CalendarDb;
+        static Decimal FromKcalToCaloriesFactor = 4.2m;
 
         public FoodController(CalendarContext db)
         {

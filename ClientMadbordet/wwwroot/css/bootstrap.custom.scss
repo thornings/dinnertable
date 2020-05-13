@@ -172,5 +172,11 @@ $theme-colors: (
     border-width: 3px !important;
 }
 
+
+
 @import "../lib/bootstrap/scss/bootstrap.scss";
+
+.deleteButton:hover {
+    color: red;
+}
 

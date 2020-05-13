@@ -8091,3 +8091,6 @@ a.text-primary-green:hover, a.text-primary-green:focus {
   .table .thead-dark th {
     color: inherit;
     border-color: #dee2e6; } }
+
+.deleteButton:hover {
+  color: red; }

@@ -129,6 +129,9 @@
   <data name="Change foods in" xml:space="preserve">
     <value>Ændre fødevare i</value>
   </data>
+  <data name="Cookies" xml:space="preserve">
+    <value>Småkager</value>
+  </data>
   <data name="Dinner" xml:space="preserve">
     <value>Aften</value>
   </data>

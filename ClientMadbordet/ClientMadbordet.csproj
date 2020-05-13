@@ -8,7 +8,6 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200421094237_AddFoodWeightTypeToCalendarFoodItem.cs" />
     <Compile Remove="Migrations\20200421094237_AddFoodWeightTypeToCalendarFoodItem.Designer.cs" />
-    <Compile Remove="Repositories\Repository.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,7 +26,6 @@
 
   <ItemGroup>
     <None Include="compilerconfig.json" />
-    <None Include="Repositories\Repository.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,12 +37,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.10" PrivateAssets="All" />
     <PackageReference Include="StackExchange.Redis" Version="2.1.30" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Repositories\IRepository.cs">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -67,6 +59,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Identity\Services\" />
+    <Folder Include="ExtensionMethods\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -74,9 +67,6 @@
       <CustomToolNamespace>Resources</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Controllers\CalendarController.en.resx">
-      <CustomToolNamespace>Resources</CustomToolNamespace>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\Calendar\IndexPartials\CalendarController.da.resx">
       <CustomToolNamespace>Resources</CustomToolNamespace>
     </EmbeddedResource>
   </ItemGroup>

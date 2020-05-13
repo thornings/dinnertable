@@ -1,5 +1,4 @@
 ﻿using ClientMadbordet.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +19,7 @@ namespace ClientMadbordet.ViewModels
         public List<Food> Foods;
         public List<CalendarFoodItemViewModel> FoodItemViewModels;
         public IQueryable<CalendarFoodItem> FoodItems;
-        public string queryString { get; set; }
+        public string QueryString { get; set; }
         public int TotalWeight { get; set; }
         public decimal TotalEnergy { get; set; }
     }

@@ -15,6 +15,6 @@
     </canvas>
 </div>
 
-<h5 class="col-3 ml-3 text-left my-auto text-capitalize">@Html.DisplayFor(modelItem => Model.Food.Name)</h5>
-<div class="col-2 d-none d-md-inline my-auto"><h5>@Html.DisplayFor(modelItem => Model.TotalEnergy) kcal</h5></div>
+<h5 class="col-3 ml-3 text-left my-auto text-capitalize">@Localizer[Model.Food.Name]</h5>
+<div class="col-2 d-none d-md-inline my-auto"><h5>@Model.TotalEnergy.ToString("N0")</h5></div>
 <div class="col-2 d-none d-md-inline my-auto"><h5>@Html.DisplayFor(modelItem => Model.Weight)</h5></div>

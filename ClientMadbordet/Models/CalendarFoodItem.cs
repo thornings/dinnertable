@@ -26,11 +26,20 @@ namespace ClientMadbordet.Models
         public FoodWeightType SelectedFoodWeightType { get; set; }
 
         [NotMapped]
+        public decimal WeightPercentage
+        {
+            get
+            {
+                return ((decimal)Weight) / 100;
+            }
+        }
+
+        [NotMapped]
         public decimal TotalEnergy
         {
             get
             {
-                return Food.Energy * WeightPercentage();
+                return (SelectedFoodWeightType!=null)?(Food.Energy * WeightPercentage) * SelectedFoodWeightType.Weight : (Food.Energy * WeightPercentage);
             }
         }
         
@@ -39,7 +48,7 @@ namespace ClientMadbordet.Models
         {
             get
             {
-                return (int)(Food.Carb * WeightPercentage());
+                return (int)(Food.Carb * WeightPercentage);
             }
         }
 
@@ -48,7 +57,7 @@ namespace ClientMadbordet.Models
         {
             get
             {
-                return (int)(Food.Protein * WeightPercentage());
+                return (int)(Food.Protein * WeightPercentage);
             }
         }
         
@@ -57,13 +66,8 @@ namespace ClientMadbordet.Models
         {
             get
             {
-                return (int)(Food.Fat * WeightPercentage());
+                return (int)(Food.Fat * WeightPercentage);
             }
-        }
-
-        private decimal WeightPercentage()
-        {
-            return ((decimal)Weight) / 100;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿
+﻿/**
+ * 
+ * */
 function getTotalPieces() {
     var totalPieces = 0; 
     $("foodItemPieces").each(function(){
@@ -21,9 +23,6 @@ function updateFoodWeightType(foodItemId, weightTypeId, newPieces) {
         "WeightTypeId": weightTypeId,
         "Pieces": newPieces,
     }
-    //alert(FoodItemWeightTypeChangeViewModel.FoodItemId + " - " + FoodItemWeightTypeChangeViewModel.WeightTypeId + " - " + FoodItemWeightTypeChangeViewModel.Pieces );
-
-
 
     $.ajax({
         type: "POST",
@@ -49,10 +48,11 @@ $(document).ready(function () {
         var calendarFoodItemid = $(this).attr("data-calendarfooditemid");
         var newValue = this.value;
         var newValueIsDigits = isNaN(newValue) === false;
+        var newValueIsEmpty = newValue.length == 0;
 
-        if (!newValueIsDigits) {
-            json = "Could not change Weight Type Correct";
-            $('.viewError').html(json);
+        if (!newValueIsDigits || newValueIsEmpty) {
+            msg = "Should only contain digits";
+            $(this).closest("td").find("p").html(msg);
             exit;
         }
 
